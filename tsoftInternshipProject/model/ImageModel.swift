@@ -12,6 +12,7 @@ struct PixabayResponse: Decodable {
 }
 
 struct ImageItem: Decodable {
+    let id: Int
     let previewURL: String
     let previewWidth: Int
     let previewHeight: Int
@@ -21,4 +22,10 @@ struct ImageItem: Decodable {
     let webformatURL: String
     let userImageURL: String
     let user: String
+    var isFavorite: Bool = false // Favori durumu
+
+    enum CodingKeys: String, CodingKey {
+        case previewURL, previewWidth, previewHeight, likes, comments, views, webformatURL, user, userImageURL, id
+    }
 }
+

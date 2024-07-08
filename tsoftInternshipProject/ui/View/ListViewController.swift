@@ -52,7 +52,11 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as! ListImageCell
         let item = items[indexPath.item]
-        cell.configure(with: item)
+        
+        // Assuming you have access to the viewContext
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        cell.configure(with: item, context: context)
+        
         return cell
     }
 
@@ -71,6 +75,5 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
         let imageHeight = width * aspectRatio
         return CGSize(width: width, height: 270)
     }
-    
     
 }

@@ -12,6 +12,8 @@ class DetailViewController: UIViewController {
     var userImageView: UIImageView!
     var userLabel: UILabel!
     var item: ImageItem!
+    var webformatUrl: String! // URL to be set from FavoritesViewController
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +58,7 @@ class DetailViewController: UIViewController {
     }
 
     func configure(with item: ImageItem) {
-        imageView.kf.setImage(with: URL(string: item.previewURL))
+        imageView.kf.setImage(with: URL(string: item.webformatURL)) // webformatUrl kullanıldı
         userLabel.text = "User: \(item.user)"
         userImageView.kf.setImage(with: URL(string: item.userImageURL))
     }
