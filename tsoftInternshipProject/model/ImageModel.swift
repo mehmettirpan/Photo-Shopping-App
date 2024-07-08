@@ -23,9 +23,11 @@ struct ImageItem: Decodable {
     let userImageURL: String
     let user: String
     var isFavorite: Bool = false // Favori durumu
+    let downloads: Int
+    let tags: String
 
     enum CodingKeys: String, CodingKey {
-        case previewURL, previewWidth, previewHeight, likes, comments, views, webformatURL, user, userImageURL, id
+        case previewURL, previewWidth, previewHeight, likes, comments, views, webformatURL, user, userImageURL, id, downloads, tags
     }
 }
 

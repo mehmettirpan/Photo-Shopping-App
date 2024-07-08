@@ -9,7 +9,12 @@ import UIKit
 import CoreData
 import Kingfisher
 
+protocol ListViewControllerDelegate: AnyObject {
+    func reloadFavoritesView()
+}
+
 class ListImageCell: UICollectionViewCell {
+    weak var delegate: ListViewControllerDelegate?
     var imageView: UIImageView!
     var likesLabel: UILabel!
     var commentsLabel: UILabel!

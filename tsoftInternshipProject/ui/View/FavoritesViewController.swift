@@ -68,7 +68,7 @@ class FavoritesViewController: UIViewController {
 
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
+//        fetchedResultsController.delegate = self
 
         let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
                 fetchRequest.sortDescriptors = [sortDescriptor]
@@ -91,20 +91,21 @@ extension FavoritesViewController: UICollectionViewDelegate, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavoriteCell", for: indexPath) as! FavoriteCell
         let favorite = fetchedResultsController.object(at: indexPath)
-        cell.configure(with: favorite)
+        cell.configure(with: favorite, collectionView: collectionView)
         return cell
     }
+
     
 }
 
-extension FavoritesViewController: NSFetchedResultsControllerDelegate {
-
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
-    }
-}
+//extension FavoritesViewController: NSFetchedResultsControllerDelegate {
+//
+//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        DispatchQueue.main.async {
+//            self.collectionView.reloadData()
+//        }
+//    }
+//}
 
 extension FavoritesViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -117,5 +118,10 @@ extension FavoritesViewController: UIScrollViewDelegate {
         }
     }
     
-    
+//    func reloadFavoritesView() {
+//        DispatchQueue.main.async {
+//            self.collectionView.reloadData()
+//        }
+//    }
+
 }

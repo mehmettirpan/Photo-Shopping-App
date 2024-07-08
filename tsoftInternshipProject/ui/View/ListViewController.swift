@@ -8,18 +8,30 @@
 
 import UIKit
 import Kingfisher
+import CoreData
 
 class ListViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     var collectionView: UICollectionView!
     var items: [ImageItem] = []
+    var refreshControl: UIRefreshControl?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
-        fetchImages()
+        fetchData {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
         collectionView.backgroundColor = UIColor.systemBackground
+        
+        refreshControl = UIRefreshControl()
+            refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+            collectionView.refreshControl = refreshControl
+        
     }
 
+    
     func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -31,16 +43,30 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
         collectionView.register(ListImageCell.self, forCellWithReuseIdentifier: "ImageCell")
         collectionView.backgroundColor = .white
         self.view.addSubview(collectionView)
+
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+        collectionView.refreshControl = refreshControl
     }
 
-    func fetchImages() {
+    @objc func handleRefresh(_ sender: Any) {
+        fetchData {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+                self.refreshControl?.endRefreshing()
+            }
+        }
+    }
+
+    private func fetchData(completion: @escaping () -> Void) {
         NetworkManager.shared.fetchImages { result in
             switch result {
             case .success(let items):
                 self.items = items
-                self.collectionView.reloadData()
+                completion()
             case .failure(let error):
                 print("Error fetching images: \(error.localizedDescription)")
+                completion()
             }
         }
     }
@@ -52,11 +78,8 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as! ListImageCell
         let item = items[indexPath.item]
-        
-        // Assuming you have access to the viewContext
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         cell.configure(with: item, context: context)
-        
         return cell
     }
 
@@ -67,13 +90,17 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    // UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let item = items[indexPath.item]
-        let width = collectionView.frame.size.width - 20 // Tek sütun, yanlardan 10 piksel boşluk
+        let width = collectionView.frame.size.width - 20
         let aspectRatio = CGFloat(item.previewHeight) / CGFloat(item.previewWidth)
         let imageHeight = width * aspectRatio
         return CGSize(width: width, height: 270)
     }
-    
 }
+
+//extension ListViewController: ListViewControllerDelegate {
+//    func reloadFavoritesView() {
+//        collectionView.reloadData()
+//    }
+//}
