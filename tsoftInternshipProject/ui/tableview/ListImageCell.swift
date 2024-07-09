@@ -192,8 +192,11 @@ class ListImageCell: UICollectionViewCell {
 
         if isImageLiked(url: url, in: context) {
             favoriteButton.setTitle("Reject Favorites", for: .normal)
+            favoriteButton.tintColor = UIColor.red
         } else {
             favoriteButton.setTitle("Add Favorites", for: .normal)
+            favoriteButton.tintColor = UIColor.systemBlue
+
         }
     }
 }

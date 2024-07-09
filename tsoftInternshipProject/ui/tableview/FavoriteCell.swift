@@ -28,6 +28,8 @@ class FavoriteCell: UICollectionViewCell {
         // Favoriten çıkar butonu
         favoriteButton = UIButton(type: .system)
         favoriteButton.setTitle("Reject Favorites", for: .normal)
+        favoriteButton.tintColor = UIColor.red
+
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
         favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         contentView.addSubview(favoriteButton)

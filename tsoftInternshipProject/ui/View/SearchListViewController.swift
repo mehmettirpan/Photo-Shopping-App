@@ -46,18 +46,7 @@ class SearchListViewController: UIViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let query = searchBar.text, !query.isEmpty else { return }
-        NetworkManager.shared.fetchImages(query: query) { result in
-            switch result {
-            case .success(let items):
-                self.items = items
-                self.collectionView.reloadData()
-            case .failure(let error):
-                print("Error fetching images: \(error.localizedDescription)")
-            }
-        }
-    }
+    
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

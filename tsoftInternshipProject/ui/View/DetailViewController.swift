@@ -8,6 +8,7 @@ import UIKit
 import Kingfisher
 import CoreData
 
+
 class DetailViewController: UIViewController {
     var imageView: UIImageView!
     var userImageView: UIImageView!
@@ -21,15 +22,16 @@ class DetailViewController: UIViewController {
     var webformatUrl: String! // URL to be set from FavoritesViewController
     var item: ImageItem! // Assuming ImageItem has properties for likes, comments, views, downloads, tags
     var imageUrl: String?
-
-
+    
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         configure(with: item)
+        updateFavoriteButtonTitle(in: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
     }
+
 
     func setupViews() {
             view.backgroundColor = .systemBackground
@@ -141,7 +143,7 @@ class DetailViewController: UIViewController {
 
 
     func configure(with item: ImageItem) {
-        imageView.kf.setImage(with: URL(string: item.webformatURL)) // webformatUrl kullanıldı
+        imageView.kf.setImage(with: URL(string: item.webformatURL))
         userLabel.text = "User: \(item.user)"
         userImageView.kf.setImage(with: URL(string: item.userImageURL))
         likesLabel.text = "Likes: \(item.likes)"
@@ -149,7 +151,9 @@ class DetailViewController: UIViewController {
         viewsLabel.text = "Views: \(item.views)"
         downloadsLabel.text = "Downloads: \(item.downloads)"
         tagsLabel.text = "Tags: \(item.tags)"
+        imageUrl = item.webformatURL // imageUrl özelliğini doğru şekilde ayarlayın
     }
+
     
     @objc func favoriteButtonTapped() {
         guard let url = imageUrl else { return }
@@ -168,6 +172,7 @@ class DetailViewController: UIViewController {
             }
         }
     }
+
     
     func isImageLiked(url: String, in context: NSManagedObjectContext) -> Bool {
         let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
@@ -175,12 +180,13 @@ class DetailViewController: UIViewController {
 
         do {
             let results = try context.fetch(fetchRequest)
-            return results.count > 0
+            return results.first?.isLiked ?? false
         } catch {
-            print("Error fetching: \(error)")
+            print("Error fetching favorites: \(error)")
             return false
         }
     }
+
 
     func removeLike(url: String, in context: NSManagedObjectContext) {
         let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
@@ -190,7 +196,7 @@ class DetailViewController: UIViewController {
             let results = try context.fetch(fetchRequest)
 
             if let favorite = results.first {
-                context.delete(favorite)
+                favorite.isLiked = false // isLiked değerini false olarak ayarlıyoruz
                 try context.save()
                 print("Favoriden çıkarıldı: \(url)")
             }
@@ -198,11 +204,12 @@ class DetailViewController: UIViewController {
             print("Failed to delete favorite: \(error)")
         }
     }
+
     
     func addLike(url: String, in context: NSManagedObjectContext) {
         let favorite = Favorite(context: context)
         favorite.imageUrl = url
-        favorite.isLiked = true
+        favorite.isLiked = true // isLiked değerini true olarak ayarlıyoruz
 
         do {
             try context.save()
@@ -211,14 +218,22 @@ class DetailViewController: UIViewController {
             print("Failed to save favorite: \(error)")
         }
     }
+
     
     func updateFavoriteButtonTitle(in context: NSManagedObjectContext) {
         guard let url = imageUrl else { return }
 
         if isImageLiked(url: url, in: context) {
             favoriteButton.setTitle("Reject Favorites", for: .normal)
+            favoriteButton.backgroundColor = UIColor.red
+            favoriteButton.tintColor = UIColor.white
         } else {
             favoriteButton.setTitle("Add Favorite", for: .normal)
+            favoriteButton.backgroundColor = UIColor.systemGray
+            favoriteButton.tintColor = UIColor.white
         }
     }
+
+    
+    
 }
