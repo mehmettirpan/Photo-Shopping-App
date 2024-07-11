@@ -44,7 +44,11 @@ class FavoritesViewController: UIViewController {
         collectionView.refreshControl = refreshControl
         
         fetchFavorites()
-
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchFavorites()
     }
 
     @objc func refreshFavorites() {
@@ -55,19 +59,6 @@ class FavoritesViewController: UIViewController {
     func fetchFavorites() {
         viewModel.fetchFavorites()
         collectionView.reloadData()
-    }
-
-    @objc private func handleFavoriteStatusChanged() {
-        fetchFavorites()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        fetchFavorites()
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
 }
 
@@ -102,6 +93,7 @@ extension FavoritesViewController: FavoriteCellDelegate {
     func didTapFavoriteButton(cell: FavoriteCell, isFavorite: Bool) {
         if let indexPath = collectionView.indexPath(for: cell) {
             viewModel.updateFavorite(at: indexPath, isFavorite: isFavorite)
+            fetchFavorites() // Ensure the collection view is reloaded after favorite status change
         }
     }
 }
