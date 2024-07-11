@@ -7,115 +7,117 @@
 
 import UIKit
 import Kingfisher
-import CoreData
-
-
 
 class FavoriteCell: UICollectionViewCell {
-
-    weak var collectionView: UICollectionView?
-    var imageView: UIImageView!
-    var likesLabel: UILabel!
-    var favoriteButton: UIButton!
-    var favorite: Favorite?
     
-
-
-
+    var viewModel: FavoriteCellViewModel?
+    let priceLabel = UILabel()
+    let tagsLabel = UILabel()
+    let likesLabel = UILabel()
+    let viewsLabel = UILabel()
+    var imageView: UIImageView!
+    var favoriteButton: UIButton!
+    weak var delegate: FavoriteCellDelegate?
+    let stackView = UIStackView()
+    var manager: FavoriteManager?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupViews()
+        manager = FavoriteManager.shared
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
-        // Favoriten çıkar butonu
-        favoriteButton = UIButton(type: .system)
-        favoriteButton.setTitle("Reject Favorites", for: .normal)
-        favoriteButton.tintColor = UIColor.red
-
-        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
-        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
-        contentView.addSubview(favoriteButton)
-
-        // Constraints for Favorite Button
-        NSLayoutConstraint.activate([
-            favoriteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)
-        ])
-
-        // ImageView
-        imageView = UIImageView(frame: .zero)
+    func setupViews() {
+        imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(imageView)
 
-        // Likes Label
-        likesLabel = UILabel(frame: .zero)
-        likesLabel.translatesAutoresizingMaskIntoConstraints = false
-        likesLabel.font = UIFont.systemFont(ofSize: 14)
-        contentView.addSubview(likesLabel)
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 4
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(stackView)
 
-        // Constraints for ImageView and Likes Label
+        viewsLabel.text = "Views"
+        likesLabel.text = "Likes"
+        tagsLabel.text = "Tags"
+
+        stackView.addArrangedSubview(viewsLabel)
+        stackView.addArrangedSubview(likesLabel)
+        stackView.addArrangedSubview(tagsLabel)
+
+        priceLabel.font = .systemFont(ofSize: 20, weight: .bold)
+        priceLabel.text = "Price"
+        priceLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(priceLabel)
+
+        favoriteButton = UIButton(type: .custom)
+        favoriteButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        favoriteButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        favoriteButton.tintColor = .red
+        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(favoriteButton)
+
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: favoriteButton.bottomAnchor, constant: 8),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 150),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            imageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 1/3),
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
 
-            likesLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
-            likesLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            likesLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            likesLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+
+            priceLabel.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 8),
+            priceLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+
+            favoriteButton.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
+            favoriteButton.leadingAnchor.constraint(equalTo: priceLabel.trailingAnchor, constant: 8),
+            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            favoriteButton.widthAnchor.constraint(equalToConstant: 24),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 24),
+
+            favoriteButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
-        
 
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
     }
 
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    func configure(with favorite: Favorite, collectionView: UICollectionView) {
-        self.favorite = favorite
-        self.collectionView = collectionView
-        
-        if let imageUrl = favorite.imageUrl {
-            imageView.kf.setImage(with: URL(string: imageUrl))
+    private func updateFavoriteIcon() {
+        guard let viewModel = viewModel else { return }
+        if viewModel.isLiked {
+            favoriteButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            favoriteButton.tintColor = .red
+            manager?.addLike(viewModel.item)
         } else {
-            imageView.image = nil
-        }
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageView.image = nil
-        likesLabel.text = nil
-    }
-    
-    @objc func favoriteButtonTapped() {
-        guard let imageUrl = favorite?.imageUrl else { return }
-
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
-        context.perform {
-            self.removeLike(url: imageUrl, in: context)
-
-        }
-    }
-
-    func removeLike(url: String, in context: NSManagedObjectContext) {
-        let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "imageUrl == %@", url)
-        
-        do {
-            let results = try context.fetch(fetchRequest)
-            
-            if let favorite = results.first {
-                context.delete(favorite)
-                try context.save()
-                print("Favoriden çıkarıldı: \(url)")
-            }
-        } catch {
-            print("Failed to delete favorite: \(error)")
+            favoriteButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            favoriteButton.tintColor = .white
+            manager?.removeLike(Int(viewModel.id))
         }
     }
     
+    @objc private func favoriteButtonTapped() {
+        guard let viewModel = viewModel else { return }
+        viewModel.isLiked.toggle()
+        updateFavoriteIcon()
+    }
+
+    func configure(with favorite: Favorite, imageItem: ImageItem) {
+        viewModel = FavoriteCellViewModel(favorite: favorite, item: imageItem)
+        imageView.kf.setImage(with: URL(string: viewModel?.imageUrl ?? ""))
+        viewsLabel.text = "Views: \(viewModel?.views ?? 0)"
+        likesLabel.text = viewModel?.likes
+        tagsLabel.text = "Tags: \(viewModel?.tags ?? "")"
+        priceLabel.text = viewModel?.idWithDecimal
+        favoriteButton.isSelected = viewModel?.isLiked ?? false
+    }
+}
+protocol FavoriteCellDelegate: AnyObject {
+    func didTapFavoriteButton(cell: FavoriteCell, isFavorite: Bool)
+    func didRemoveFavorite(cell: FavoriteCell)
 }

@@ -8,26 +8,25 @@
 import UIKit
 import CoreData
 
+import UIKit
+import CoreData
+
 class FavoritesViewController: UIViewController {
 
     var collectionView: UICollectionView!
-    var fetchedResultsController: NSFetchedResultsController<Favorite>!
     var refreshControl: UIRefreshControl!
-    
+    var viewModel: FavoritesViewModel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.systemBackground
+        viewModel = FavoritesViewModel()
         
-        // Collection View Layout
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: (view.frame.width / 2) - 16, height: 200)
+        layout.itemSize = CGSize(width: view.frame.width - 32, height: 200)
         layout.minimumLineSpacing = 16
-        layout.minimumInteritemSpacing = 8
-        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         
-        // Collection View
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -37,23 +36,16 @@ class FavoritesViewController: UIViewController {
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
         
-        // Refresh Control
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshFavorites), for: .valueChanged)
         collectionView.refreshControl = refreshControl
         
-        // Fetch Favorites
-        fetchFavorites()
-        
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         fetchFavorites()
     }
 
@@ -63,65 +55,42 @@ class FavoritesViewController: UIViewController {
     }
 
     func fetchFavorites() {
-        let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "imageUrl", ascending: true)]
-
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-//        fetchedResultsController.delegate = self
-
-        let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
-                fetchRequest.sortDescriptors = [sortDescriptor]
-
-        do {
-            try fetchedResultsController.performFetch()
-            collectionView.reloadData()
-        } catch {
-            print("Failed to fetch favorites: \(error)")
-        }
+        viewModel.fetchFavorites()
+        collectionView.reloadData()
     }
 }
 
 extension FavoritesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fetchedResultsController.sections?.first?.numberOfObjects ?? 0
+        return viewModel.numberOfFavorites
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavoriteCell", for: indexPath) as! FavoriteCell
-        let favorite = fetchedResultsController.object(at: indexPath)
-        cell.configure(with: favorite, collectionView: collectionView)
+        let favorite = viewModel.favorite(at: indexPath)
+        let imageItem = viewModel.imageItem(at: indexPath)
+        cell.configure(with: favorite, imageItem: imageItem)
+        cell.delegate = self
         return cell
     }
-
     
+    func collectionView(_ collectionView: UICollectionView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
 }
 
-//extension FavoritesViewController: NSFetchedResultsControllerDelegate {
-//
-//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        DispatchQueue.main.async {
-//            self.collectionView.reloadData()
-//        }
-//    }
-//}
-
-extension FavoritesViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let height = scrollView.frame.size.height
-
-        if offsetY > contentHeight - height {
-            fetchFavorites()
+extension FavoritesViewController: FavoriteCellDelegate {
+    func didRemoveFavorite(cell: FavoriteCell) {
+        if let indexPath = collectionView.indexPath(for: cell) {
+            viewModel.deleteFavorite(at: indexPath)
+            collectionView.deleteItems(at: [indexPath])
         }
     }
     
-//    func reloadFavoritesView() {
-//        DispatchQueue.main.async {
-//            self.collectionView.reloadData()
-//        }
-//    }
-
+    func didTapFavoriteButton(cell: FavoriteCell, isFavorite: Bool) {
+        if let indexPath = collectionView.indexPath(for: cell) {
+            viewModel.updateFavorite(at: indexPath, isFavorite: isFavorite)
+        }
+    }
 }

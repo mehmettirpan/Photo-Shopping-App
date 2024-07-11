@@ -9,25 +9,21 @@ import Alamofire
 
 class NetworkManager {
     static let shared = NetworkManager()
-    private let apiKey = APIKEY // API anahtarını saklamak için özel bir alan.
-    private let baseURL = "https://pixabay.com/api/" // Pixabay API'sinin temel URL'i.
+    private let apiKey = APIKEY
+    private let baseURL = "https://pixabay.com/api/"
 
-    // İmajları getiren fonksiyon.
-    func fetchImages(query: String? = nil, completion: @escaping (Result<[ImageItem], Error>) -> Void) {
-        var url = "\(baseURL)?key=\(apiKey)" // Temel URL'e API anahtarı eklenmiş URL.
-
-        // Eğer bir sorgu varsa, URL'e sorguyu ekler.
+    func fetchImages(query: String? = nil, page: Int = 1, completion: @escaping (Result<[ImageItem], Error>) -> Void) {
+        var url = "\(baseURL)?key=\(apiKey)&page=\(page)"
         if let query = query {
             url += "&q=\(query)"
         }
 
-        // Alamofire ile URL'ye istek gönderilir, ve gelen cevap dekodable olarak PixabayResponse tipine çevrilir.
         AF.request(url).responseDecodable(of: PixabayResponse.self) { response in
             switch response.result {
             case .success(let pixabayResponse):
-                completion(.success(pixabayResponse.hits)) // Başarılı olursa, gelen görüntü öğelerini success case'i içinde döndürür.
+                completion(.success(pixabayResponse.hits))
             case .failure(let error):
-                completion(.failure(error)) // Başarısız olursa, hata durumunu failure case'i içinde döndürür.
+                completion(.failure(error))
             }
         }
     }

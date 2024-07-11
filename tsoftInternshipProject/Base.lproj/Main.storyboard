@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="82r-sW-Wvs">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -38,16 +39,17 @@
                         <segue destination="wLB-fA-bQD" kind="relationship" relationship="viewControllers" id="W5x-co-XnU"/>
                         <segue destination="vXt-3M-9h9" kind="relationship" relationship="viewControllers" id="1jU-9u-wCS"/>
                         <segue destination="rtc-PN-DIC" kind="relationship" relationship="viewControllers" id="Ils-Jf-Ua7"/>
+                        <segue destination="L9i-re-Vf5" kind="relationship" relationship="viewControllers" id="bLD-ir-3Hd"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8ai-RK-YLP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="133.58778625954199" y="3.5211267605633805"/>
         </scene>
-        <!--Search List View Controller-->
+        <!--Search View Controller-->
         <scene sceneID="7tB-L5-Yzx">
             <objects>
-                <viewController id="c0G-jc-4Xa" customClass="SearchListViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="c0G-jc-4Xa" customClass="SearchViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QtN-lP-2HH">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -60,7 +62,7 @@
             </objects>
             <point key="canvasLocation" x="1985.4961832061067" y="368.3098591549296"/>
         </scene>
-        <!--Favorites View Controller-->
+        <!--Favorites-->
         <scene sceneID="Ph1-nL-ajG">
             <objects>
                 <viewController id="77f-c2-fV0" customClass="FavoritesViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
@@ -70,11 +72,27 @@
                         <viewLayoutGuide key="safeArea" id="ayW-dv-Qc8"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="eIe-Vx-Xwp"/>
+                    <navigationItem key="navigationItem" title="Favorites" id="eIe-Vx-Xwp"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="abR-g5-cQO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1985" y="1105"/>
+        </scene>
+        <!--Cart-->
+        <scene sceneID="t3S-8a-zp4">
+            <objects>
+                <viewController id="fv2-8j-DWy" customClass="CartViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Fmg-a1-Imc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="cU2-9H-TmN"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Cart" id="9uc-wd-ThG"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5Ga-Fn-CFT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1984" y="1792"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="Zti-ow-tqM">
@@ -111,17 +129,17 @@
             </objects>
             <point key="canvasLocation" x="1058.7786259541983" y="-309.15492957746483"/>
         </scene>
-        <!--List View Controller-->
+        <!--Photo Shop-->
         <scene sceneID="7S1-VX-3xS">
             <objects>
-                <viewController storyboardIdentifier="ListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4o1-8Q-Djy" customClass="ListViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4o1-8Q-Djy" customClass="FeedViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5U3-lg-qbH">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="wUI-q4-qa2"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="c5Y-HD-AnV"/>
+                    <navigationItem key="navigationItem" title="Photo Shop" id="c5Y-HD-AnV"/>
                     <connections>
                         <segue destination="cKD-fO-zpT" kind="show" id="bx8-oM-IQK"/>
                     </connections>
@@ -155,8 +173,8 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rtc-PN-DIC" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Favorites" image="heart" catalog="system" id="J0F-ky-mBR"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="H7K-xP-So4">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="H7K-xP-So4">
+                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -168,8 +186,28 @@
             </objects>
             <point key="canvasLocation" x="1057" y="1105"/>
         </scene>
+        <!--Cart-->
+        <scene sceneID="jBI-hy-IMF">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="L9i-re-Vf5" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Cart" image="cart" catalog="system" id="0VP-ss-XCn"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="O83-us-38K">
+                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="fv2-8j-DWy" kind="relationship" relationship="rootViewController" id="Meb-LG-c6f"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1JG-XJ-z4y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1057" y="1792"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="cart" catalog="system" width="128" height="102"/>
         <image name="heart" catalog="system" width="128" height="107"/>
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
