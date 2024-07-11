@@ -88,23 +88,16 @@ class FavoriteCell: UICollectionViewCell {
         favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
     }
 
-    private func updateFavoriteIcon() {
-        guard let viewModel = viewModel else { return }
-        if viewModel.isLiked {
-            favoriteButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-            favoriteButton.tintColor = .red
-            manager?.addLike(viewModel.item)
-        } else {
-            favoriteButton.setImage(UIImage(systemName: "heart"), for: .normal)
-            favoriteButton.tintColor = .white
-            manager?.removeLike(Int(viewModel.id))
-        }
-    }
-    
     @objc private func favoriteButtonTapped() {
         guard let viewModel = viewModel else { return }
         viewModel.isLiked.toggle()
         updateFavoriteIcon()
+        delegate?.didTapFavoriteButton(cell: self, isFavorite: viewModel.isLiked)
+    }
+
+    private func updateFavoriteIcon() {
+        guard let viewModel = viewModel else { return }
+        favoriteButton.isSelected = viewModel.isLiked
     }
 
     func configure(with favorite: Favorite, imageItem: ImageItem) {

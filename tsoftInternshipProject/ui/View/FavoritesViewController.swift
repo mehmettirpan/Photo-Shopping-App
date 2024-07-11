@@ -8,9 +8,6 @@
 import UIKit
 import CoreData
 
-import UIKit
-import CoreData
-
 class FavoritesViewController: UIViewController {
 
     var collectionView: UICollectionView!
@@ -47,6 +44,7 @@ class FavoritesViewController: UIViewController {
         collectionView.refreshControl = refreshControl
         
         fetchFavorites()
+
     }
 
     @objc func refreshFavorites() {
@@ -57,6 +55,19 @@ class FavoritesViewController: UIViewController {
     func fetchFavorites() {
         viewModel.fetchFavorites()
         collectionView.reloadData()
+    }
+
+    @objc private func handleFavoriteStatusChanged() {
+        fetchFavorites()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchFavorites()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

@@ -29,23 +29,23 @@ class FavoritesViewModel {
     }
     
     func imageItem(at indexPath: IndexPath) -> ImageItem {
-            return imageItems[indexPath.item]
-        }
+        return imageItems[indexPath.item]
+    }
 
     func fetchFavorites() {
-            let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
-            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateAdded", ascending: false)]
+        let fetchRequest: NSFetchRequest<Favorite> = Favorite.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "dateAdded", ascending: false)]
 
-            do {
-                favorites = try context.fetch(fetchRequest)
-                imageItems = favorites.map { favorite in
-                    // Assuming you have a way to create an ImageItem from a Favorite
-                    ImageItem(id: Int(favorite.id), previewURL: favorite.imageUrl ?? "", previewWidth: Int(favorite.previewWidth), previewHeight: Int(favorite.previewHeight), likes: Int(favorite.likes), comments: 0, views: Int(favorite.views), webformatURL: favorite.webFormatUrl ?? "", userImageURL: favorite.userImageUrl ?? "",user: favorite.user ?? "", downloads: Int(favorite.downloads), tags: favorite.tags ?? "")
-                }
-            } catch {
-                print("Failed to fetch favorites: \(error)")
+        do {
+            favorites = try context.fetch(fetchRequest)
+            imageItems = favorites.map { favorite in
+                // Assuming you have a way to create an ImageItem from a Favorite
+                ImageItem(id: Int(favorite.id), previewURL: favorite.imageUrl ?? "", previewWidth: Int(favorite.previewWidth), previewHeight: Int(favorite.previewHeight), likes: Int(favorite.likes), comments: 0, views: Int(favorite.views), webformatURL: favorite.webFormatUrl ?? "", userImageURL: favorite.userImageUrl ?? "", user: favorite.user ?? "", downloads: Int(favorite.downloads), tags: favorite.tags ?? "")
             }
+        } catch {
+            print("Failed to fetch favorites: \(error)")
         }
+    }
 
     func deleteFavorite(at indexPath: IndexPath) {
         let favorite = favorites[indexPath.item]
@@ -55,8 +55,12 @@ class FavoritesViewModel {
     }
 
     func updateFavorite(at indexPath: IndexPath, isFavorite: Bool) {
-        favorites[indexPath.item].isLiked = isFavorite
-        saveContext()
+        if !isFavorite {
+            deleteFavorite(at: indexPath)
+        } else {
+            favorites[indexPath.item].isLiked = isFavorite
+            saveContext()
+        }
     }
 
     private func saveContext() {
@@ -66,6 +70,4 @@ class FavoritesViewModel {
             print("Failed to save context: \(error)")
         }
     }
-
-    
 }
