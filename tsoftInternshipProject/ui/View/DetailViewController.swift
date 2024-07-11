@@ -136,6 +136,14 @@ class DetailViewController: UIViewController {
             favoriteButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            // Refresh data here
+            configure()
+            updateFavoriteButtonTitle()
+        }
+
 
     func configure() {
         imageView.kf.setImage(with: URL(string: viewModel.imageUrl ?? ""))
