@@ -101,16 +101,18 @@ class LoginViewController: UIViewController {
     }
 
     @objc func loginButtonTapped() {
-        if usernameTextField.text == "MehmetTırpan" && passwordTextField.text == "admin" {
+        guard let username = usernameTextField.text, let password = passwordTextField.text else {
+            return
+        }
+
+        if username == adminUser.username && password == "admin" {
+            saveUserToUserDefaults(user: adminUser)
             showWelcome(title: "Hoş Geldin Patron", message: "")
+            showMainScreen(user: adminUser)
         } else {
-            guard let username = usernameTextField.text, let password = passwordTextField.text else {
-                return
-            }
-            
             var isLoginSuccessful = false
             var loggedInUser: User?
-            
+
             for user in users {
                 if user.username == username && password == user.email {
                     print("Login successful for user: \(user.name)")
@@ -119,9 +121,10 @@ class LoginViewController: UIViewController {
                     break
                 }
             }
-            
+
             if isLoginSuccessful {
                 if let user = loggedInUser {
+                    saveUserToUserDefaults(user: user)
                     showWelcome(title: "Login Successful", message: "Welcome, \(user.name)")
                     showMainScreen(user: user)
                 }
@@ -130,6 +133,15 @@ class LoginViewController: UIViewController {
             }
         }
     }
+
+
+    func saveUserToUserDefaults(user: User) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(user) {
+            UserDefaults.standard.set(encoded, forKey: "loggedInUser")
+        }
+    }
+
 
     func showMainScreen(user: User? = nil) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -145,6 +157,7 @@ class LoginViewController: UIViewController {
             self.present(tabBarController, animated: true, completion: nil)
         }
     }
+
 
 
     func showAlert(title: String, message: String) {
@@ -167,5 +180,33 @@ class LoginViewController: UIViewController {
             }
         }
     }
+
+    
+    
+//    ************************
+    
+    // Admin Kullanıcı Bilgileri
+    let adminUser = User(
+        id: 0,
+        name: "Mehmet Tırpan",
+        username: "MehmetTırpan",
+        email: "admin@example.com",
+        address: Address(
+            street: "Main Street",
+            suite: "Suite 100",
+            city: "Istanbul",
+            zipcode: "34000",
+            geo: Geo(lat: "41.0082", lng: "28.9784")
+        ),
+        phone: "+90 212 123 45 67",
+        website: "www.mehmettirpan.com",
+        company: Company(
+            name: "Tırpan Tech",
+            catchPhrase: "Innovation for Tomorrow",
+            bs: "technology"
+        )
+    )
+
+//    ************************
 
 }

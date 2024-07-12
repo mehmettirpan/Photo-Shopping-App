@@ -29,6 +29,7 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         self.view.backgroundColor = UIColor.systemBackground
         
         print(user?.name as Any) // Debug için user'ı yazdır
@@ -80,6 +81,8 @@ class ProfileViewController: UIViewController {
         
         setupConstraints()
         configureView()
+        loadUserFromUserDefaults()
+
     }
 
     
@@ -124,6 +127,11 @@ class ProfileViewController: UIViewController {
         ])
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configureView()
+    }
+
     func configureView() {
         guard let user = user else {
             print("User is nil")
@@ -151,4 +159,18 @@ class ProfileViewController: UIViewController {
     @objc func logoutButtonTapped() {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    func loadUserFromUserDefaults() {
+        if let savedUserData = UserDefaults.standard.object(forKey: "loggedInUser") as? Data {
+            let decoder = JSONDecoder()
+            if let loadedUser = try? decoder.decode(User.self, from: savedUserData) {
+                self.user = loadedUser
+            } else {
+                print("Failed to decode user from UserDefaults")
+            }
+        } else {
+            print("No user found in UserDefaults")
+        }
+    }
+    
 }

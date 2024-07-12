@@ -113,7 +113,7 @@
         <!--Profile-->
         <scene sceneID="WLy-6F-rYv">
             <objects>
-                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="guA-Qm-Jt9" customClass="ProfileViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="guA-Qm-Jt9" customClass="ProfileViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zMZ-jb-uh9">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -240,7 +240,7 @@
         <!--Profile-->
         <scene sceneID="upV-QV-3t1">
             <objects>
-                <navigationController storyboardIdentifier="ProfileViewController" automaticallyAdjustsScrollViewInsets="NO" id="1ld-Ga-B7p" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1ld-Ga-B7p" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person" catalog="system" id="dL7-jp-GA2"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="6XJ-9u-uKw">
