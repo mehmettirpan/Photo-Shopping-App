@@ -47,6 +47,7 @@ class FavoriteCell: UICollectionViewCell {
         viewsLabel.text = "Views"
         likesLabel.text = "Likes"
         tagsLabel.text = "Tags"
+        tagsLabel.numberOfLines = 2
 
         stackView.addArrangedSubview(viewsLabel)
         stackView.addArrangedSubview(likesLabel)
@@ -72,6 +73,7 @@ class FavoriteCell: UICollectionViewCell {
 
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             stackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 
             priceLabel.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 8),
             priceLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SearchListViewModel {
+class SearchViewModel {
     private var items: [ImageItem] = []
     private var currentPage = 1
     private var isFetching = false

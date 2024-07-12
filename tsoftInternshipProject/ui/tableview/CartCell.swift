@@ -7,11 +7,12 @@
 
 import UIKit
 
-class AddToCartCell: UICollectionViewCell {
+class CartCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+
     }
 
 }

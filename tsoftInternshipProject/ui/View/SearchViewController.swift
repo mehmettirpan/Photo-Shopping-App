@@ -11,12 +11,12 @@ import Kingfisher
 class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     var searchBar: UISearchBar!
     var collectionView: UICollectionView!
-    var viewModel: SearchListViewModel!
+    var viewModel: SearchViewModel!
     var refreshControl: UIRefreshControl?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel = SearchListViewModel()
+        viewModel = SearchViewModel()
         setupSearchBar()
         setupCollectionView()
         fetchImages()

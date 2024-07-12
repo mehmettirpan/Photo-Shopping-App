@@ -77,7 +77,7 @@ class SplashScreenVC: UIViewController {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             
             // Storyboard'dan Tab Bar Controller'ı yükle
-            if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+            if let tabBarController = storyboard.instantiateViewController(withIdentifier: "LoginVC") as? LoginViewController {
                 
                 // Geçiş animasyonu
                 tabBarController.modalTransitionStyle = .crossDissolve
