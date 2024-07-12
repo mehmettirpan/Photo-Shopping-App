@@ -22,6 +22,7 @@
 		0242A9962C35263200639914 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 0242A9952C35263200639914 /* Base */; };
 		0242A9982C35263300639914 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0242A9972C35263300639914 /* Assets.xcassets */; };
 		0242A99B2C35263300639914 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 0242A99A2C35263300639914 /* Base */; };
+		0247B5E42C41574C00F3A6D8 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0247B5E32C41574C00F3A6D8 /* ProfileViewController.swift */; };
 		026AB6BA2C3EA2D9000E70C7 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026AB6B92C3EA2D9000E70C7 /* CartViewModel.swift */; };
 		026AB6BC2C3EABEB000E70C7 /* FavoriteCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026AB6BB2C3EABEB000E70C7 /* FavoriteCellViewModel.swift */; };
 		02937FDC2C41480F005BB3DF /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02937FDB2C41480F005BB3DF /* UserModel.swift */; };
@@ -60,6 +61,7 @@
 		0242A9972C35263300639914 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0242A99A2C35263300639914 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0242A99C2C35263300639914 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0247B5E32C41574C00F3A6D8 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		026AB6B92C3EA2D9000E70C7 /* CartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewModel.swift; sourceTree = "<group>"; };
 		026AB6BB2C3EABEB000E70C7 /* FavoriteCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteCellViewModel.swift; sourceTree = "<group>"; };
 		02937FDB2C41480F005BB3DF /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				02F39C002C381F8B0020DBF1 /* FavoritesViewController.swift */,
 				02948B682C3D82EC0089B0F1 /* CartViewController.swift */,
 				02937FDF2C4148AB005BB3DF /* LoginViewController.swift */,
+				0247B5E32C41574C00F3A6D8 /* ProfileViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -352,6 +355,7 @@
 				02F0499D2C36D09A0022677E /* SearchViewController.swift in Sources */,
 				02B3AC0E2C3BAFD3000771A9 /* FavoritesModel.xcdatamodeld in Sources */,
 				0232A57C2C3D681000D85614 /* FeedCell.swift in Sources */,
+				0247B5E42C41574C00F3A6D8 /* ProfileViewController.swift in Sources */,
 				026AB6BC2C3EABEB000E70C7 /* FavoriteCellViewModel.swift in Sources */,
 				0232A5762C3D513000D85614 /* FavoritesViewModel.swift in Sources */,
 				02B3AC102C3BB970000771A9 /* FavoriteCell.swift in Sources */,

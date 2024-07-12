@@ -55,7 +55,7 @@
                         <segue destination="vXt-3M-9h9" kind="relationship" relationship="viewControllers" id="1jU-9u-wCS"/>
                         <segue destination="rtc-PN-DIC" kind="relationship" relationship="viewControllers" id="Ils-Jf-Ua7"/>
                         <segue destination="L9i-re-Vf5" kind="relationship" relationship="viewControllers" id="bLD-ir-3Hd"/>
-                        <segue destination="1ld-Ga-B7p" kind="relationship" relationship="viewControllers" id="YsU-RA-5cH"/>
+                        <segue destination="1ld-Ga-B7p" kind="relationship" relationship="viewControllers" id="dLO-i2-x3V"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8ai-RK-YLP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -113,7 +113,7 @@
         <!--Profile-->
         <scene sceneID="WLy-6F-rYv">
             <objects>
-                <viewController id="guA-Qm-Jt9" sceneMemberID="viewController">
+                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="guA-Qm-Jt9" customClass="ProfileViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zMZ-jb-uh9">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -240,7 +240,7 @@
         <!--Profile-->
         <scene sceneID="upV-QV-3t1">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1ld-Ga-B7p" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ProfileViewController" automaticallyAdjustsScrollViewInsets="NO" id="1ld-Ga-B7p" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person" catalog="system" id="dL7-jp-GA2"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="6XJ-9u-uKw">
