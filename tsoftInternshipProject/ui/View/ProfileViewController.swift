@@ -75,6 +75,9 @@ class ProfileViewController: UIViewController {
         
         logoutButton = UIButton(type: .system)
         logoutButton.setTitle("Logout", for: .normal)
+        logoutButton.setTitleColor(.white, for: .normal)
+        logoutButton.backgroundColor = .systemRed
+        logoutButton.layer.cornerRadius = 8
         logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(logoutButton)
@@ -121,8 +124,12 @@ class ProfileViewController: UIViewController {
             mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             mapView.heightAnchor.constraint(equalToConstant: 200),
             
+            // Logout butonunun genişliğini artırma
             logoutButton.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 20),
-            logoutButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            logoutButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            logoutButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            logoutButton.heightAnchor.constraint(equalToConstant: 50), // Buton yüksekliği
+            
             logoutButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
     }

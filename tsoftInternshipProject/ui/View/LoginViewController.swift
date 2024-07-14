@@ -26,7 +26,7 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        checkLoginStatus()
         self.view.backgroundColor = UIColor.systemBackground
         
         imageView = UIImageView(image: UIImage(named: "logo"))
@@ -57,6 +57,9 @@ class LoginViewController: UIViewController {
         
         let loginButton = UIButton(type: .system)
         loginButton.setTitle("Login", for: .normal)
+        loginButton.setTitleColor(.white, for: .normal)
+        loginButton.backgroundColor = .systemGreen
+        loginButton.layer.cornerRadius = 8
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(loginButton)
@@ -78,7 +81,9 @@ class LoginViewController: UIViewController {
             passwordTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             
             loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20),
-            loginButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            loginButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            loginButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            loginButton.heightAnchor.constraint(equalToConstant: 50), // Buton yüksekliği
             
             designedByLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             designedByLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
@@ -141,7 +146,13 @@ class LoginViewController: UIViewController {
             UserDefaults.standard.set(encoded, forKey: "loggedInUser")
         }
     }
-
+    func getUserFromUserDefaults() -> User? {
+            if let savedUserData = UserDefaults.standard.data(forKey: "loggedInUser"),
+               let savedUser = try? JSONDecoder().decode(User.self, from: savedUserData) {
+                return savedUser
+            }
+            return nil
+        }
 
     func showMainScreen(user: User? = nil) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -158,6 +169,11 @@ class LoginViewController: UIViewController {
         }
     }
 
+    func checkLoginStatus() {
+            if let savedUser = getUserFromUserDefaults() {
+                showMainScreen(user: savedUser)
+            }
+        }
 
 
     func showAlert(title: String, message: String) {
