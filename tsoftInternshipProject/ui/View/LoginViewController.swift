@@ -21,8 +21,9 @@ class LoginViewController: UIViewController {
     var passwordTextField: UITextField!
     var imageView: UIImageView!
     var designedByLabel: UILabel!
-
-    var users: [User] = []
+    var loginButton: UIButton!
+    
+    var loginViewModel = LoginViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +56,7 @@ class LoginViewController: UIViewController {
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(passwordTextField)
         
-        let loginButton = UIButton(type: .system)
+        loginButton = UIButton(type: .system)
         loginButton.setTitle("Login", for: .normal)
         loginButton.setTitleColor(.white, for: .normal)
         loginButton.backgroundColor = .systemGreen
@@ -83,26 +84,12 @@ class LoginViewController: UIViewController {
             loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20),
             loginButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             loginButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            loginButton.heightAnchor.constraint(equalToConstant: 50), // Buton yüksekliği
+            loginButton.heightAnchor.constraint(equalToConstant: 50),
             
             designedByLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             designedByLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             designedByLabel.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
-            
-        fetchUsers()
-    }
-
-    func fetchUsers() {
-        UserNetworkManager.shared.fetchUsers { users in
-            if let users = users {
-                self.users = users
-                print("Fetched \(users.count) users")
-                for user in users {
-                    print("User: \(user.name) (\(user.username))")
-                }
-            }
-        }
     }
 
     @objc func loginButtonTapped() {
@@ -110,15 +97,15 @@ class LoginViewController: UIViewController {
             return
         }
 
-        if username == adminUser.username && password == "admin" {
-            saveUserToUserDefaults(user: adminUser)
+        if username == loginViewModel.adminUser.username && password == "admin" {
+            loginViewModel.saveUserToUserDefaults(user: loginViewModel.adminUser)
             showWelcome(title: "Hoş Geldin Patron", message: "")
-            showMainScreen(user: adminUser)
+            showMainScreen(user: loginViewModel.adminUser)
         } else {
             var isLoginSuccessful = false
             var loggedInUser: User?
 
-            for user in users {
+            for user in loginViewModel.users {
                 if user.username == username && password == user.email {
                     print("Login successful for user: \(user.name)")
                     isLoginSuccessful = true
@@ -129,7 +116,7 @@ class LoginViewController: UIViewController {
 
             if isLoginSuccessful {
                 if let user = loggedInUser {
-                    saveUserToUserDefaults(user: user)
+                    loginViewModel.saveUserToUserDefaults(user: user)
                     showWelcome(title: "Login Successful", message: "Welcome, \(user.name)")
                     showMainScreen(user: user)
                 }
@@ -139,20 +126,32 @@ class LoginViewController: UIViewController {
         }
     }
 
-
-    func saveUserToUserDefaults(user: User) {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(user) {
-            UserDefaults.standard.set(encoded, forKey: "loggedInUser")
+    func checkLoginStatus() {
+        if let savedUser = loginViewModel.getUserFromUserDefaults() {
+            showMainScreen(user: savedUser)
         }
     }
-    func getUserFromUserDefaults() -> User? {
-            if let savedUserData = UserDefaults.standard.data(forKey: "loggedInUser"),
-               let savedUser = try? JSONDecoder().decode(User.self, from: savedUserData) {
-                return savedUser
+
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func showWelcome(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        present(alert, animated: true) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                alert.dismiss(animated: true, completion: {
+                    if let user = self.loginViewModel.users.first(where: { $0.username == self.usernameTextField.text }) {
+                        self.showMainScreen(user: user)
+                    } else {
+                        self.showMainScreen()
+                    }
+                })
             }
-            return nil
         }
+    }
 
     func showMainScreen(user: User? = nil) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -168,61 +167,4 @@ class LoginViewController: UIViewController {
             self.present(tabBarController, animated: true, completion: nil)
         }
     }
-
-    func checkLoginStatus() {
-            if let savedUser = getUserFromUserDefaults() {
-                showMainScreen(user: savedUser)
-            }
-        }
-
-
-    func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
-    }
-    
-    func showWelcome(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        present(alert, animated: true) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                alert.dismiss(animated: true, completion: {
-                    if let user = self.users.first(where: { $0.username == self.usernameTextField.text }) {
-                        self.showMainScreen(user: user)
-                    } else {
-                        self.showMainScreen()
-                    }
-                })
-            }
-        }
-    }
-
-    
-    
-//    ************************
-    
-    // Admin Kullanıcı Bilgileri
-    let adminUser = User(
-        id: 0,
-        name: "Mehmet Tırpan",
-        username: "MehmetTırpan",
-        email: "admin@example.com",
-        address: Address(
-            street: "Main Street",
-            suite: "Suite 100",
-            city: "Istanbul",
-            zipcode: "34000",
-            geo: Geo(lat: "41.0082", lng: "28.9784")
-        ),
-        phone: "+90 212 123 45 67",
-        website: "www.mehmettirpan.com",
-        company: Company(
-            name: "Tırpan Tech",
-            catchPhrase: "Innovation for Tomorrow",
-            bs: "technology"
-        )
-    )
-
-//    ************************
-
 }

@@ -29,7 +29,6 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         self.view.backgroundColor = UIColor.systemBackground
         
         print(user?.name as Any) // Debug için user'ı yazdır
@@ -85,10 +84,8 @@ class ProfileViewController: UIViewController {
         setupConstraints()
         configureView()
         loadUserFromUserDefaults()
-
     }
 
-    
     func setupConstraints() {
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -124,12 +121,10 @@ class ProfileViewController: UIViewController {
             mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             mapView.heightAnchor.constraint(equalToConstant: 200),
             
-            // Logout butonunun genişliğini artırma
             logoutButton.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 20),
             logoutButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             logoutButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            logoutButton.heightAnchor.constraint(equalToConstant: 50), // Buton yüksekliği
-            
+            logoutButton.heightAnchor.constraint(equalToConstant: 50),
             logoutButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
     }
@@ -164,7 +159,14 @@ class ProfileViewController: UIViewController {
     }
     
     @objc func logoutButtonTapped() {
-        self.dismiss(animated: true, completion: nil)
+        UserDefaults.standard.removeObject(forKey: "loggedInUser") // Clear user data from UserDefaults
+        navigateToLoginScreen()
+    }
+
+    func navigateToLoginScreen() {
+        let loginViewController = LoginViewController()
+        loginViewController.modalPresentationStyle = .fullScreen
+        self.present(loginViewController, animated: true, completion: nil)
     }
     
     func loadUserFromUserDefaults() {
@@ -179,5 +181,4 @@ class ProfileViewController: UIViewController {
             print("No user found in UserDefaults")
         }
     }
-    
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		022290782C43D63C00D4A50D /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022290772C43D63C00D4A50D /* LoginViewModel.swift */; };
 		0232A5682C3D1CC900D85614 /* NetworkFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0232A5672C3D1CC900D85614 /* NetworkFunctions.swift */; };
 		0232A56A2C3D2EF000D85614 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0232A5692C3D2EF000D85614 /* SearchViewModel.swift */; };
 		0232A56C2C3D304A00D85614 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0232A56B2C3D304A00D85614 /* FeedViewModel.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		022290772C43D63C00D4A50D /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		0232A5672C3D1CC900D85614 /* NetworkFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFunctions.swift; sourceTree = "<group>"; };
 		0232A5692C3D2EF000D85614 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		0232A56B2C3D304A00D85614 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				0232A5732C3D458900D85614 /* DetailViewModel.swift */,
 				02948B6E2C3D83270089B0F1 /* AddToCartViewModel.swift */,
 				026AB6B92C3EA2D9000E70C7 /* CartViewModel.swift */,
+				022290772C43D63C00D4A50D /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -116,8 +119,8 @@
 		0232A5632C3D180600D85614 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				0242A9902C35263200639914 /* SceneDelegate.swift */,
 				0242A98E2C35263200639914 /* AppDelegate.swift */,
+				0242A9902C35263200639914 /* SceneDelegate.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				0232A5762C3D513000D85614 /* FavoritesViewModel.swift in Sources */,
 				02B3AC102C3BB970000771A9 /* FavoriteCell.swift in Sources */,
 				026AB6BA2C3EA2D9000E70C7 /* CartViewModel.swift in Sources */,
+				022290782C43D63C00D4A50D /* LoginViewModel.swift in Sources */,
 				0232A56E2C3D30F900D85614 /* FeedCellViewModel.swift in Sources */,
 				02937FDC2C41480F005BB3DF /* UserModel.swift in Sources */,
 				0242A9912C35263200639914 /* SceneDelegate.swift in Sources */,
