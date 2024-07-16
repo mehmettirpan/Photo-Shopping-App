@@ -25,6 +25,10 @@ class CartViewModel {
         items.append(item)
         saveCartItems()
     }
+    
+    func clearCart() {
+            items.removeAll()
+        }
 
     func updateQuantity(at index: Int, quantity: Int) {
         guard index >= 0 && index < items.count else {

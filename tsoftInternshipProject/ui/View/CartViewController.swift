@@ -77,6 +77,14 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
             totalPriceLabel.leadingAnchor.constraint(equalTo: confirmButton.trailingAnchor, constant: 10),
             totalPriceLabel.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
         ])
+        
+        confirmButton.addTarget(self, action: #selector(confirmCartButtonTapped), for: .touchUpInside)
+
+    }
+    
+    @objc private func confirmCartButtonTapped() {
+        let paymentVC = PaymentViewController()
+        navigationController?.pushViewController(paymentVC, animated: true)
     }
     
     private func reloadCart() {

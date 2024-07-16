@@ -28,6 +28,8 @@
 		0247B5E42C41574C00F3A6D8 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0247B5E32C41574C00F3A6D8 /* ProfileViewController.swift */; };
 		026AB6BC2C3EABEB000E70C7 /* FavoriteCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026AB6BB2C3EABEB000E70C7 /* FavoriteCellViewModel.swift */; };
 		027ED1AB2C4718010045C70A /* CartItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027ED1AA2C4718010045C70A /* CartItemCell.swift */; };
+		027ED1AD2C471ED90045C70A /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027ED1AC2C471ED90045C70A /* PaymentViewController.swift */; };
+		027ED1B02C4725FA0045C70A /* PaymentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027ED1AF2C4725FA0045C70A /* PaymentViewModel.swift */; };
 		02937FDC2C41480F005BB3DF /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02937FDB2C41480F005BB3DF /* UserModel.swift */; };
 		02937FDE2C41485C005BB3DF /* UserNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02937FDD2C41485C005BB3DF /* UserNetworkManager.swift */; };
 		02937FE02C4148AB005BB3DF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02937FDF2C4148AB005BB3DF /* LoginViewController.swift */; };
@@ -68,6 +70,8 @@
 		0247B5E32C41574C00F3A6D8 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		026AB6BB2C3EABEB000E70C7 /* FavoriteCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteCellViewModel.swift; sourceTree = "<group>"; };
 		027ED1AA2C4718010045C70A /* CartItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemCell.swift; sourceTree = "<group>"; };
+		027ED1AC2C471ED90045C70A /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
+		027ED1AF2C4725FA0045C70A /* PaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewModel.swift; sourceTree = "<group>"; };
 		02937FDB2C41480F005BB3DF /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		02937FDD2C41485C005BB3DF /* UserNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetworkManager.swift; sourceTree = "<group>"; };
 		02937FDF2C4148AB005BB3DF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -111,6 +115,7 @@
 				0232A5732C3D458900D85614 /* DetailViewModel.swift */,
 				02948B6E2C3D83270089B0F1 /* CartViewModel.swift */,
 				022290772C43D63C00D4A50D /* LoginViewModel.swift */,
+				027ED1AF2C4725FA0045C70A /* PaymentViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -210,6 +215,7 @@
 				02948B682C3D82EC0089B0F1 /* CartViewController.swift */,
 				02937FDF2C4148AB005BB3DF /* LoginViewController.swift */,
 				0247B5E32C41574C00F3A6D8 /* ProfileViewController.swift */,
+				027ED1AC2C471ED90045C70A /* PaymentViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -356,6 +362,7 @@
 				027ED1AB2C4718010045C70A /* CartItemCell.swift in Sources */,
 				0232A5682C3D1CC900D85614 /* NetworkFunctions.swift in Sources */,
 				0242A9932C35263200639914 /* FeedViewController.swift in Sources */,
+				027ED1B02C4725FA0045C70A /* PaymentViewModel.swift in Sources */,
 				0242A98F2C35263200639914 /* AppDelegate.swift in Sources */,
 				02F0499D2C36D09A0022677E /* SearchViewController.swift in Sources */,
 				0232A57C2C3D681000D85614 /* FeedCell.swift in Sources */,
@@ -365,6 +372,7 @@
 				02B3AC102C3BB970000771A9 /* FavoriteCell.swift in Sources */,
 				022290782C43D63C00D4A50D /* LoginViewModel.swift in Sources */,
 				0232A56E2C3D30F900D85614 /* FeedCellViewModel.swift in Sources */,
+				027ED1AD2C471ED90045C70A /* PaymentViewController.swift in Sources */,
 				02937FDC2C41480F005BB3DF /* UserModel.swift in Sources */,
 				0242A9912C35263200639914 /* SceneDelegate.swift in Sources */,
 				02F39BFF2C381E1B0020DBF1 /* SplashScreenVC.swift in Sources */,
