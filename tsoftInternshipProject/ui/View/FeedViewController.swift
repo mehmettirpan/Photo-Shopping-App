@@ -12,13 +12,11 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     private var collectionView: UICollectionView!
     private var viewModel: FeedViewModel!
     private var refreshControl: UIRefreshControl?
-    private var cartViewModel: CartViewModel! // Add this line
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel = FeedViewModel()
-        cartViewModel = CartViewModel() // Add this line
         setupCollectionView()
         setupRefreshControl()
         fetchData()
@@ -63,6 +61,16 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     @objc private func handleRefresh(_ sender: Any) {
         fetchData()
+    }
+    
+    private func setupCartButton() {
+        let cartButton = UIBarButtonItem(title: "Cart", style: .plain, target: self, action: #selector(cartButtonTapped))
+        navigationItem.rightBarButtonItem = cartButton
+    }
+
+    @objc private func cartButtonTapped() {
+        let cartVC = CartViewController()
+        navigationController?.pushViewController(cartVC, animated: true)
     }
     
     private func fetchData() {

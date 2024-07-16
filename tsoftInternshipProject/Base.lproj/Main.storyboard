@@ -97,7 +97,7 @@
         <!--Cart-->
         <scene sceneID="t3S-8a-zp4">
             <objects>
-                <viewController id="fv2-8j-DWy" customClass="CartViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CartViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fv2-8j-DWy" customClass="CartViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Fmg-a1-Imc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -108,7 +108,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Ga-Fn-CFT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2091" y="735"/>
+            <point key="canvasLocation" x="2090.8396946564885" y="734.50704225352115"/>
         </scene>
         <!--Profile-->
         <scene sceneID="WLy-6F-rYv">
