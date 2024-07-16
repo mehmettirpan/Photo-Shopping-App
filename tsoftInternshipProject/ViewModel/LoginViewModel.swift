@@ -42,10 +42,10 @@ class LoginViewModel {
         UserNetworkManager.shared.fetchUsers { [weak self] users in
             if let users = users {
                 self?.users = users
-                print("Fetched \(users.count) users")
-                for user in users {
-                    print("User: \(user.name) (\(user.username))")
-                }
+//                print("Fetched \(users.count) users")
+//                for user in users {
+//                    print("User: \(user.name) (\(user.username))")
+//                }
             }
             completion()
         }

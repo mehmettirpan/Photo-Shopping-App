@@ -12,13 +12,17 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     private var collectionView: UICollectionView!
     private var viewModel: FeedViewModel!
     private var refreshControl: UIRefreshControl?
+    private var cartViewModel: CartViewModel! // Add this line
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel = FeedViewModel()
+        cartViewModel = CartViewModel() // Add this line
         setupCollectionView()
         setupRefreshControl()
         fetchData()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
