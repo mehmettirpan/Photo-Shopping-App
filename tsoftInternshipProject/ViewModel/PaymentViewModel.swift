@@ -31,7 +31,7 @@ class PaymentViewModel {
             expiryYear,
             cvc,
             address == "Address" ? "" : address
-        ].contains(where: { $0.isEmpty }) && isExpiryDateValid()
+        ].contains(where: { $0.isEmpty }) && isExpiryDateValid() && isCardNumberValid()
     }
 
     private func isExpiryDateValid() -> Bool {
@@ -39,15 +39,20 @@ class PaymentViewModel {
             return false
         }
 
+        
         let currentDate = Date()
         let calendar = Calendar.current
         let currentYear = calendar.component(.year, from: currentDate) % 100
         let currentMonth = calendar.component(.month, from: currentDate)
 
-        if year < currentYear || (year == currentYear && month < currentMonth) {
+        if year < currentYear || (year == currentYear && month <= currentMonth) {
             return false
         }
 
         return month >= 1 && month <= 12
     }
+    
+    private func isCardNumberValid() -> Bool {
+            return cardNumber.count == 16 && cardNumber.allSatisfy({ $0.isNumber })
+        }
 }

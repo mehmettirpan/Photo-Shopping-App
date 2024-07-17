@@ -31,10 +31,16 @@ class PaymentViewController: UIViewController {
         updateConfirmButtonState()
         setupKeyboardObservers()
         setupTapGesture()
+        
+        addressTextView.text = "Address Details"
+        addressTextView.textColor = .placeholderText
+        
+        addressDescriptionTextView.text = "Address Description (Optional)"
+        addressDescriptionTextView.textColor = .placeholderText
     }
 
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
 
         scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +56,7 @@ class PaymentViewController: UIViewController {
         cityTextField = createTextField(placeholder: "City")
         districtTextField = createTextField(placeholder: "District")
         neighborhoodTextField = createTextField(placeholder: "Neighborhood")
-        addressTextView = createTextView(placeholder: "Address")
+        addressTextView = createTextView(placeholder: "Address Details")
         addressDescriptionTextView = createTextView(placeholder: "Address Description (Optional)")
         cardholderNameTextField = createTextField(placeholder: "Cardholder Name")
         cardNumberTextField = createTextField(placeholder: "Card Number (16 digits)", keyboardType: .numberPad)
@@ -194,7 +200,7 @@ class PaymentViewController: UIViewController {
         let isFormValid = viewModel.isFormValid
         
         confirmButton.isEnabled = isFormValid
-        confirmButton.backgroundColor = isFormValid ? .systemOrange : .systemGray
+        confirmButton.backgroundColor = isFormValid ? UIColor(named: "ButtonColor") : .systemGray
     }
 
     private func setupKeyboardObservers() {
@@ -297,23 +303,23 @@ extension PaymentViewController: UITextFieldDelegate {
 
 extension PaymentViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == .lightGray {
+        if textView.textColor == .placeholderText {
             textView.text = ""
-            textView.textColor = .black
+            textView.textColor = .label
         }
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
-            textView.text = textView == addressTextView ? "Address" : "Address Description (Optional)"
-            textView.textColor = .lightGray
+            textView.text = textView == addressTextView ? "Address Details" : "Address Description (Optional)"
+            textView.textColor = .placeholderText
         }
         updateViewModelForTextView(textView)
     }
 
     private func updateViewModelForTextView(_ textView: UITextView) {
         if textView == addressTextView {
-            viewModel.address = textView.text == "Address" ? "" : textView.text
+            viewModel.address = textView.text == "Address Details" ? "" : textView.text
         } else if textView == addressDescriptionTextView {
             viewModel.addressDescription = textView.text == "Address Description (Optional)" ? "" : textView.text
         }
