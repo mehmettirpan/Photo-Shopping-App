@@ -26,6 +26,10 @@ class FeedViewModel {
         }
     }
     
+    func resetData() {
+        items.removeAll()
+    }
+    
     func numberOfItems() -> Int {
         return items.count
     }

@@ -5,22 +5,21 @@
 //  Created by Mehmet Tırpan on 3.07.2024.
 //
 
-
 import UIKit
 
 class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     private var collectionView: UICollectionView!
     private var viewModel: FeedViewModel!
     private var refreshControl: UIRefreshControl?
-
+    private var isLoading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel = FeedViewModel()
         setupCollectionView()
         setupRefreshControl()
+        setupCartButton()
         fetchData()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +59,7 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     @objc private func handleRefresh(_ sender: Any) {
+        viewModel.resetData()
         fetchData()
     }
     
@@ -74,8 +74,11 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     private func fetchData() {
+        guard !isLoading else { return }
+        isLoading = true
         viewModel.fetchData { [weak self] result in
             DispatchQueue.main.async {
+                self?.isLoading = false
                 self?.collectionView.reloadData()
                 self?.refreshControl?.endRefreshing()
                 if case let .failure(error) = result {

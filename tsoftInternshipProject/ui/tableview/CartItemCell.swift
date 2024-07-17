@@ -64,15 +64,15 @@ class CartItemCell: UICollectionViewCell {
             priceLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 10),
             priceLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            quantityLabel.leadingAnchor.constraint(equalTo: priceLabel.trailingAnchor, constant: 10),
-            quantityLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            increaseButton.leadingAnchor.constraint(equalTo: quantityLabel.trailingAnchor, constant: 10),
+            increaseButton.leadingAnchor.constraint(equalTo: priceLabel.trailingAnchor, constant: 10),
             increaseButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             increaseButton.widthAnchor.constraint(equalToConstant: 30),
             increaseButton.heightAnchor.constraint(equalToConstant: 30),
             
-            decreaseButton.leadingAnchor.constraint(equalTo: increaseButton.trailingAnchor, constant: 10),
+            quantityLabel.leadingAnchor.constraint(equalTo: increaseButton.trailingAnchor, constant: 10),
+            quantityLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            decreaseButton.leadingAnchor.constraint(equalTo: quantityLabel.trailingAnchor, constant: 10),
             decreaseButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             decreaseButton.widthAnchor.constraint(equalToConstant: 30),
             decreaseButton.heightAnchor.constraint(equalToConstant: 30),
@@ -83,6 +83,7 @@ class CartItemCell: UICollectionViewCell {
             deleteButton.widthAnchor.constraint(equalToConstant: 50),
             deleteButton.heightAnchor.constraint(equalToConstant: 30),
         ])
+
     }
     
     func configure(with item: CartItem, index: Int, target: CartViewController) {

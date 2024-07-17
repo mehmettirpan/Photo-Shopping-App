@@ -118,6 +118,10 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
             item.quantity -= 1
             viewModel.updateQuantity(at: index, quantity: item.quantity)
             reloadCart()
+        }else{
+//            print("Decrease Quantity Else çalıştı")
+            viewModel.removeItem(at: index)
+            reloadCart()
         }
     }
     
