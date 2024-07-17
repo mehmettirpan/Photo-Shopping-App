@@ -45,7 +45,7 @@ class FavoriteCellViewModel {
         let idFourDigit = id / 1000 // id değerinin ilk 4 hanesi
         let firstTwoDigits = String(format: "%02d", idFourDigit / 100)
         let lastTwoDigits = String(format: "%02d", idFourDigit % 100)
-        return "\(firstTwoDigits),\(lastTwoDigits)$"
+        return "\(firstTwoDigits).\(lastTwoDigits)"
     }
     
 }

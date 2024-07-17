@@ -27,7 +27,7 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.frame.width - 40, height: 100)
@@ -41,7 +41,7 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
         view.addSubview(collectionView)
         
         footerView = UIView()
-        footerView.backgroundColor = .lightGray
+        footerView.backgroundColor = .feedCellBackround
         footerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(footerView)
         
@@ -53,7 +53,7 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
         confirmButton = UIButton(type: .system)
         confirmButton.setTitle("Confirm Cart", for: .normal)
         confirmButton.setTitleColor(.white, for: .normal)
-        confirmButton.backgroundColor = .systemGreen
+        confirmButton.backgroundColor = UIColor(named: "ButtonColor")
         confirmButton.layer.cornerRadius = 8
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         footerView.addSubview(confirmButton)
@@ -71,7 +71,7 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
             
             confirmButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 20),
             confirmButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
-            confirmButton.widthAnchor.constraint(equalTo: footerView.widthAnchor, multiplier: 0.33),
+            confirmButton.widthAnchor.constraint(equalTo: footerView.widthAnchor, multiplier: 0.4),
             confirmButton.heightAnchor.constraint(equalToConstant: 40),
             
             totalPriceLabel.leadingAnchor.constraint(equalTo: confirmButton.trailingAnchor, constant: 10),

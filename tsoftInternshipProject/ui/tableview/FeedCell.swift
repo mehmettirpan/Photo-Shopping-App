@@ -39,7 +39,7 @@ class FeedCell: UICollectionViewCell {
     }
 
     private func setupViews() {
-        contentView.backgroundColor = UIColor(red: 0.91, green: 0.92, blue: 0.92, alpha: 1.0)
+        contentView.backgroundColor = UIColor.feedCellBackround
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
 
@@ -60,7 +60,7 @@ class FeedCell: UICollectionViewCell {
         addToCartButton = UIButton(type: .system)
         addToCartButton.setTitle("Add to Cart", for: .normal)
         addToCartButton.setTitleColor(.white, for: .normal)
-        addToCartButton.backgroundColor = .systemOrange
+        addToCartButton.backgroundColor = UIColor(named: "ButtonColor")
         addToCartButton.layer.cornerRadius = 8
         addToCartButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(addToCartButton)

@@ -25,6 +25,9 @@ class CartItemCell: UICollectionViewCell {
     }
     
     private func setupUI() {
+        
+        backgroundColor = .systemBackground
+        
         imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(imageView)
@@ -48,7 +51,7 @@ class CartItemCell: UICollectionViewCell {
         contentView.addSubview(decreaseButton)
         
         deleteButton = UIButton(type: .system)
-        deleteButton.setTitle("Delete", for: .normal)
+        deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(deleteButton)
         
