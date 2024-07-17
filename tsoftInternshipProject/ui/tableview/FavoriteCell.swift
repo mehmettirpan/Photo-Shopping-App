@@ -17,6 +17,7 @@ class FavoriteCell: UICollectionViewCell {
     let viewsLabel = UILabel()
     var imageView: UIImageView!
     var favoriteButton: UIButton!
+    var addToCartButton: UIButton!
     weak var delegate: FavoriteCellDelegate?
     let stackView = UIStackView()
     var manager: FavoriteManager?
@@ -65,6 +66,14 @@ class FavoriteCell: UICollectionViewCell {
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(favoriteButton)
 
+        addToCartButton = UIButton(type: .system)
+        addToCartButton.setTitle("Add to Cart", for: .normal)
+        addToCartButton.setTitleColor(.white, for: .normal)
+        addToCartButton.backgroundColor = UIColor(named: "ButtonColor")
+        addToCartButton.layer.cornerRadius = 8
+        addToCartButton.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(addToCartButton)
+
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -80,14 +89,19 @@ class FavoriteCell: UICollectionViewCell {
 
             favoriteButton.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
             favoriteButton.leadingAnchor.constraint(equalTo: priceLabel.trailingAnchor, constant: 8),
-            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             favoriteButton.widthAnchor.constraint(equalToConstant: 24),
             favoriteButton.heightAnchor.constraint(equalToConstant: 24),
 
-            favoriteButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            addToCartButton.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 8),
+            addToCartButton.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            addToCartButton.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 1/2),
+            addToCartButton.heightAnchor.constraint(equalToConstant: 30),
+
+            addToCartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
 
         favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        addToCartButton.addTarget(self, action: #selector(addToCartButtonTapped), for: .touchUpInside)
     }
 
     @objc private func favoriteButtonTapped() {
@@ -102,16 +116,44 @@ class FavoriteCell: UICollectionViewCell {
         favoriteButton.isSelected = viewModel.isLiked
     }
 
+    @objc private func addToCartButtonTapped() {
+        guard let viewModel = viewModel else {
+            print("Error: viewModel is nil")
+            return
+        }
+        
+        // Ensure imageView has an image
+        guard let image = imageView.image else {
+            print("Error: Image view does not have an image")
+            return
+        }
+        
+        // Ensure price is correctly formatted and converted
+        guard let price = Double(viewModel.idWithDecimal) else {
+            print("Error: Could not convert idWithDecimal to price")
+            return
+        }
+        
+        // Create a cart item
+        let cartItem = CartItem(id: Int(viewModel.id), image: image, price: price, quantity: 1)
+        
+        // Add to cart and print the cart state
+        CartViewModel.shared.addItem(cartItem)
+        print("Added item to cart: \(cartItem)")
+        print("Current cart items: \(CartViewModel.shared.cartItems)")
+    }
+
     func configure(with favorite: Favorite, imageItem: ImageItem) {
         viewModel = FavoriteCellViewModel(favorite: favorite, item: imageItem)
         imageView.kf.setImage(with: URL(string: viewModel?.imageUrl ?? ""))
         viewsLabel.text = "Views: \(viewModel?.views ?? 0)"
         likesLabel.text = viewModel?.likes
         tagsLabel.text = "Tags: \(viewModel?.tags ?? "")"
-        priceLabel.text = viewModel?.idWithDecimal
+        priceLabel.text = "\(viewModel!.idWithDecimal)$"
         favoriteButton.isSelected = viewModel?.isLiked ?? false
     }
 }
+
 protocol FavoriteCellDelegate: AnyObject {
     func didTapFavoriteButton(cell: FavoriteCell, isFavorite: Bool)
     func didRemoveFavorite(cell: FavoriteCell)
