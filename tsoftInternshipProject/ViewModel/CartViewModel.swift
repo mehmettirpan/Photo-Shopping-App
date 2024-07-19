@@ -22,8 +22,13 @@ class CartViewModel {
     }
 
     func addItem(_ item: CartItem) {
-        items.append(item)
-        saveCartItems()
+        if let index = cartItems.firstIndex(where: { $0.id == item.id }) {
+            items[index].quantity += 1
+            saveCartItems()
+        } else {
+            items.append(item)
+            saveCartItems()
+        }
     }
     
     func clearCart() {
