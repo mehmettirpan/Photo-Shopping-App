@@ -17,6 +17,8 @@ class ProfileViewController: UIViewController {
     }
     
     var nameLabel: UILabel!
+    var scrollView: UIScrollView!
+    var contentView: UIView!
     var usernameLabel: UILabel!
     var emailLabel: UILabel!
     var addressLabel: UILabel!
@@ -25,6 +27,10 @@ class ProfileViewController: UIViewController {
     var companyLabel: UILabel!
     var mapView: MKMapView!
     var logoutButton: UIButton!
+    var ordersButton: UIButton!
+    var savedAddressesButton: UIButton!
+    var savedCardsButton: UIButton!
+    var buttonsStackView: UIStackView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,44 +39,74 @@ class ProfileViewController: UIViewController {
         
         print(user?.name as Any) // Debug için user'ı yazdır
 
+        ordersButton = createButton(title: "My Orders")
+        ordersButton.addTarget(self, action: #selector(showOrders), for: .touchUpInside)
+        
+        savedAddressesButton = createButton(title: "Saved Addresses")
+        savedAddressesButton.addTarget(self, action: #selector(showSavedAddresses), for: .touchUpInside)
+        savedAddressesButton.titleLabel?.numberOfLines = 2
+        savedAddressesButton.titleLabel?.textAlignment = .center
+        savedAddressesButton.backgroundColor = UIColor(named: "ButtonColor")
+        
+        savedCardsButton = createButton(title: "Saved Cards")
+        savedCardsButton.addTarget(self, action: #selector(showSavedCards), for: .touchUpInside)
+        savedCardsButton.backgroundColor = UIColor(named: "ButtonColor")
+        
+        ordersButton.backgroundColor = UIColor(named: "ButtonColor")
+        
+        buttonsStackView = UIStackView(arrangedSubviews: [ordersButton, savedAddressesButton, savedCardsButton])
+        buttonsStackView.axis = .horizontal
+        buttonsStackView.distribution = .fillEqually
+        buttonsStackView.spacing = 10
+        buttonsStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(buttonsStackView)
+        
+        scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        
+        contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        
         nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.numberOfLines = 0
-        self.view.addSubview(nameLabel)
+        contentView.addSubview(nameLabel)
         
         usernameLabel = UILabel()
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         usernameLabel.numberOfLines = 0
-        self.view.addSubview(usernameLabel)
+        contentView.addSubview(usernameLabel)
         
         emailLabel = UILabel()
         emailLabel.translatesAutoresizingMaskIntoConstraints = false
         emailLabel.numberOfLines = 0
-        self.view.addSubview(emailLabel)
+        contentView.addSubview(emailLabel)
         
         addressLabel = UILabel()
         addressLabel.translatesAutoresizingMaskIntoConstraints = false
         addressLabel.numberOfLines = 0
-        self.view.addSubview(addressLabel)
+        contentView.addSubview(addressLabel)
         
         phoneLabel = UILabel()
         phoneLabel.translatesAutoresizingMaskIntoConstraints = false
         phoneLabel.numberOfLines = 0
-        self.view.addSubview(phoneLabel)
+        contentView.addSubview(phoneLabel)
         
         websiteLabel = UILabel()
         websiteLabel.translatesAutoresizingMaskIntoConstraints = false
         websiteLabel.numberOfLines = 0
-        self.view.addSubview(websiteLabel)
+        contentView.addSubview(websiteLabel)
         
         companyLabel = UILabel()
         companyLabel.translatesAutoresizingMaskIntoConstraints = false
         companyLabel.numberOfLines = 0
-        self.view.addSubview(companyLabel)
+        contentView.addSubview(companyLabel)
         
         mapView = MKMapView()
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(mapView)
+        contentView.addSubview(mapView)
         
         logoutButton = UIButton(type: .system)
         logoutButton.setTitle("Logout", for: .normal)
@@ -79,7 +115,7 @@ class ProfileViewController: UIViewController {
         logoutButton.layer.cornerRadius = 8
         logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(logoutButton)
+        contentView.addSubview(logoutButton)
         
         setupConstraints()
         configureView()
@@ -88,44 +124,60 @@ class ProfileViewController: UIViewController {
 
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            nameLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            buttonsStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            buttonsStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            buttonsStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            buttonsStackView.heightAnchor.constraint(equalToConstant: 50),
+            
+            scrollView.topAnchor.constraint(equalTo: buttonsStackView.bottomAnchor, constant: 20),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             usernameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            usernameLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            usernameLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            usernameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            usernameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             emailLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 10),
-            emailLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            emailLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            emailLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            emailLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             addressLabel.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 10),
-            addressLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            addressLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            addressLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            addressLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             phoneLabel.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 10),
-            phoneLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            phoneLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            phoneLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            phoneLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             websiteLabel.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: 10),
-            websiteLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            websiteLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            websiteLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            websiteLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             companyLabel.topAnchor.constraint(equalTo: websiteLabel.bottomAnchor, constant: 10),
-            companyLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            companyLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            companyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            companyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             mapView.topAnchor.constraint(equalTo: companyLabel.bottomAnchor, constant: 10),
-            mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            mapView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            mapView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             mapView.heightAnchor.constraint(equalToConstant: 200),
             
             logoutButton.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 20),
-            logoutButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            logoutButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            logoutButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            logoutButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             logoutButton.heightAnchor.constraint(equalToConstant: 50),
-            logoutButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            logoutButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
     
@@ -170,15 +222,33 @@ class ProfileViewController: UIViewController {
     }
     
     func loadUserFromUserDefaults() {
-        if let savedUserData = UserDefaults.standard.object(forKey: "loggedInUser") as? Data {
-            let decoder = JSONDecoder()
-            if let loadedUser = try? decoder.decode(User.self, from: savedUserData) {
-                self.user = loadedUser
-            } else {
-                print("Failed to decode user from UserDefaults")
-            }
-        } else {
-            print("No user found in UserDefaults")
+        if let savedUserData = UserDefaults.standard.data(forKey: "loggedInUser"),
+           let savedUser = try? JSONDecoder().decode(User.self, from: savedUserData) {
+            self.user = savedUser
         }
+    }
+    
+    func createButton(title: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }
+    
+    @objc func showOrders() {
+        // Implement functionality to show orders
+    }
+    
+    @objc func showSavedAddresses() {
+        let savedAddressesVC = SavedAddressesViewController()
+        self.navigationController?.pushViewController(savedAddressesVC, animated: true)
+    }
+    
+    @objc func showSavedCards() {
+        let savedCardsVC = SavedCardsViewController()
+        self.navigationController?.pushViewController(savedCardsVC, animated: true)
     }
 }
