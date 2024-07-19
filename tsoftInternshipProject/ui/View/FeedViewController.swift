@@ -57,15 +57,15 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
         collectionView.refreshControl = refreshControl
     }
-    
     @objc private func handleRefresh(_ sender: Any) {
-        viewModel.resetData()
+//        viewModel.resetData() -> viewModel da olan fonksiyon düzenlenmeli
         fetchData()
     }
     
     private func setupCartButton() {
-        let cartButton = UIBarButtonItem(title: "Cart", style: .plain, target: self, action: #selector(cartButtonTapped))
+        let cartButton = UIBarButtonItem(image: UIImage(systemName: "cart"), style: .plain, target: self, action: #selector(cartButtonTapped))
         navigationItem.rightBarButtonItem = cartButton
+        
     }
 
     @objc private func cartButtonTapped() {

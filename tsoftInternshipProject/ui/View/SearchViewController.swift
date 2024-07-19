@@ -49,6 +49,11 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
 
     @objc func handleRefresh(_ sender: Any) {
+        guard let searchBarText = searchBar.text, searchBarText.isEmpty else {
+            refreshControl?.endRefreshing()
+            return
+        }
+        viewModel.resetData()
         fetchImages()
     }
 

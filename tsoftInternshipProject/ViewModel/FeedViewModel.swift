@@ -26,9 +26,14 @@ class FeedViewModel {
         }
     }
     
-    func resetData() {
-        items.removeAll()
-    }
+//    Bu özellik bazı çökmelere yol açabiliyor search ve feed ekranında kontrol etmek gerekiyor, handlereflesh de kullandım, bazı istenmeyecek çökmelere yol açabiliyor
+    /*
+     Bunu düzeltmek için currentpage ve gelen veriler biraz daha ayarlanmalı,
+     zaman olduğunda bakılıp yapılabilecek bir fonksiyon, yapılsa daha güzel olur
+     */
+//    func resetData() {
+//        items.removeAll()
+//    }
     
     func numberOfItems() -> Int {
         return items.count
