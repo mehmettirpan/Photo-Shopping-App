@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="Card" representedClassName="Card" syncable="YES" codeGenerationType="class">
+        <attribute name="cardholderName" optional="YES" attributeType="String"/>
+        <attribute name="cardNumber" optional="YES" attributeType="String"/>
+        <attribute name="cvc" optional="YES" attributeType="String"/>
+        <attribute name="expiryMonth" optional="YES" attributeType="String"/>
+        <attribute name="expiryYear" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="Favorite" representedClassName="Favorite" syncable="YES" codeGenerationType="class">
         <attribute name="comments" optional="YES" attributeType="String"/>
         <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -15,5 +22,14 @@
         <attribute name="userImageUrl" optional="YES" attributeType="String"/>
         <attribute name="views" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="webFormatUrl" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="SavedAddress" representedClassName="SavedAddress" syncable="YES" codeGenerationType="class">
+        <attribute name="addressDescription" optional="YES" attributeType="String"/>
+        <attribute name="addressDetails" optional="YES" attributeType="String"/>
+        <attribute name="addressTitle" optional="YES" attributeType="String"/>
+        <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="district" optional="YES" attributeType="String"/>
+        <attribute name="neighborhood" optional="YES" attributeType="String"/>
+        <attribute name="street" optional="YES" attributeType="String"/>
     </entity>
 </model>

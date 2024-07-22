@@ -24,6 +24,7 @@ struct Address: Codable {
     let city: String
     let zipcode: String
     let geo: Geo
+    var district: String
 }
 
 struct Geo: Codable {
@@ -36,3 +37,4 @@ struct Company: Codable {
     let catchPhrase: String
     let bs: String
 }
+

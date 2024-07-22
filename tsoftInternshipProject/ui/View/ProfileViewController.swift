@@ -38,7 +38,7 @@ class ProfileViewController: UIViewController {
         self.view.backgroundColor = UIColor.systemBackground
         
         print(user?.name as Any) // Debug için user'ı yazdır
-
+        
         ordersButton = createButton(title: "My Orders")
         ordersButton.addTarget(self, action: #selector(showOrders), for: .touchUpInside)
         
@@ -121,7 +121,7 @@ class ProfileViewController: UIViewController {
         configureView()
         loadUserFromUserDefaults()
     }
-
+    
     func setupConstraints() {
         NSLayoutConstraint.activate([
             buttonsStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -132,7 +132,7 @@ class ProfileViewController: UIViewController {
             scrollView.topAnchor.constraint(equalTo: buttonsStackView.bottomAnchor, constant: 20),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -185,13 +185,13 @@ class ProfileViewController: UIViewController {
         super.viewWillAppear(animated)
         configureView()
     }
-
+    
     func configureView() {
         guard let user = user else {
             print("User is nil")
             return
         }
-
+        
         nameLabel.text = "Name: \(user.name)"
         usernameLabel.text = "Username: \(user.username)"
         emailLabel.text = "Email: \(user.email)"
@@ -209,46 +209,44 @@ class ProfileViewController: UIViewController {
             mapView.setRegion(region, animated: true)
         }
     }
-    
     @objc func logoutButtonTapped() {
-        UserDefaults.standard.removeObject(forKey: "loggedInUser") // Clear user data from UserDefaults
-        navigateToLoginScreen()
-    }
-
-    func navigateToLoginScreen() {
+        UserDefaults.standard.removeObject(forKey: "loggedInUser")
         let loginViewController = LoginViewController()
         loginViewController.modalPresentationStyle = .fullScreen
-        self.present(loginViewController, animated: true, completion: nil)
+        present(loginViewController, animated: true, completion: nil)
     }
     
-    func loadUserFromUserDefaults() {
-        if let savedUserData = UserDefaults.standard.data(forKey: "loggedInUser"),
-           let savedUser = try? JSONDecoder().decode(User.self, from: savedUserData) {
-            self.user = savedUser
-        }
+    @objc func showOrders() {
+        let ordersVC = MyOrdersViewController()
+        navigationController?.pushViewController(ordersVC, animated: true)
+    }
+    
+    @objc func showSavedAddresses() {
+        let savedAddressesVC = SavedAddressesViewController()
+        navigationController?.pushViewController(savedAddressesVC, animated: true)
+    }
+    
+    @objc func showSavedCards() {
+        let savedCardsVC = SavedCardsViewController()
+        navigationController?.pushViewController(savedCardsVC, animated: true)
     }
     
     func createButton(title: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = UIColor(named: "ButtonColor")
         button.layer.cornerRadius = 8
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
     
-    @objc func showOrders() {
-        // Implement functionality to show orders
-    }
-    
-    @objc func showSavedAddresses() {
-        let savedAddressesVC = SavedAddressesViewController()
-        self.navigationController?.pushViewController(savedAddressesVC, animated: true)
-    }
-    
-    @objc func showSavedCards() {
-        let savedCardsVC = SavedCardsViewController()
-        self.navigationController?.pushViewController(savedCardsVC, animated: true)
+    func loadUserFromUserDefaults() {
+        if let data = UserDefaults.standard.data(forKey: "loggedInUser"),
+           let savedUser = try? JSONDecoder().decode(User.self, from: data) {
+            self.user = savedUser
+        } else {
+            print("Failed to load user from UserDefaults")
+        }
     }
 }

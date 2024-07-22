@@ -12,6 +12,7 @@ struct CartItem: Codable {
     let image: UIImage
     let price: Double
     var quantity: Int
+    
 
     private enum CodingKeys: String, CodingKey {
         case id, image, price, quantity

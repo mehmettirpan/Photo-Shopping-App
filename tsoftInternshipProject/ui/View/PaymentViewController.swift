@@ -9,7 +9,6 @@ import UIKit
 
 class PaymentViewController: UIViewController {
     private var viewModel = PaymentViewModel()
-    
     private var scrollView: UIScrollView!
     private var contentView: UIView!
     private var cityTextField: UITextField!
@@ -23,6 +22,10 @@ class PaymentViewController: UIViewController {
     private var expiryYearTextField: UITextField!
     private var cvcTextField: UITextField!
     private var confirmButton: UIButton!
+    private var saveAddressSwitch: UISwitch!
+    private var saveCardSwitch: UISwitch!
+    let addressTitleTextField = UITextField()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,31 +80,45 @@ class PaymentViewController: UIViewController {
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         confirmButton.isEnabled = false
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
-        contentView.addSubview(confirmButton)
 
+        saveAddressSwitch = UISwitch()
+        saveAddressSwitch.translatesAutoresizingMaskIntoConstraints = false
+        saveAddressSwitch.addTarget(self, action: #selector(saveAddressSwitchChanged), for: .valueChanged)
+
+        saveCardSwitch = UISwitch()
+        saveCardSwitch.translatesAutoresizingMaskIntoConstraints = false
+        saveCardSwitch.addTarget(self, action: #selector(saveCardSwitchChanged), for: .valueChanged)
+        
+        
+
+        // Create address stack view with vertical axis
         let addressStackView = UIStackView(arrangedSubviews: [
             addressLabel,
             cityTextField,
             districtTextField,
             neighborhoodTextField,
             addressTextView,
-            addressDescriptionTextView
+            addressDescriptionTextView,
+            createLabelWithSwitch(text: "Save Address", switchControl: saveAddressSwitch)
         ])
         addressStackView.axis = .vertical
         addressStackView.spacing = 8
         addressStackView.translatesAutoresizingMaskIntoConstraints = false
 
+        // Create payment stack view
         let paymentStackView = UIStackView(arrangedSubviews: [
             paymentLabel,
             cardholderNameTextField,
             cardNumberTextField,
             expiryMonthYearStackView(),
-            cvcTextField
+            cvcTextField,
+            createLabelWithSwitch(text: "Save Card", switchControl: saveCardSwitch)
         ])
         paymentStackView.axis = .vertical
         paymentStackView.spacing = 8
         paymentStackView.translatesAutoresizingMaskIntoConstraints = false
 
+        // Create main stack view
         let mainStackView = UIStackView(arrangedSubviews: [
             addressStackView,
             paymentStackView,
@@ -112,6 +129,7 @@ class PaymentViewController: UIViewController {
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(mainStackView)
 
+        // Set constraints
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -142,6 +160,15 @@ class PaymentViewController: UIViewController {
         addressDescriptionTextView.delegate = self
     }
 
+
+    @objc private func saveAddressSwitchChanged(_ sender: UISwitch) {
+        viewModel.addressSwitchOn = sender.isOn
+    }
+
+    @objc private func saveCardSwitchChanged(_ sender: UISwitch) {
+        viewModel.cardSwitchOn = sender.isOn
+    }
+
     private func setupBindings() {
         // Bindings from ViewModel to UI (for simplicity, we use target-action approach here)
         cityTextField.addTarget(self, action: #selector(updateViewModel(_:)), for: .editingChanged)
@@ -163,7 +190,7 @@ class PaymentViewController: UIViewController {
         case districtTextField:
             viewModel.district = textField.text ?? ""
         case neighborhoodTextField:
-            viewModel.neighborhood = textField.text ?? ""
+            viewModel.street = textField.text ?? ""
         case cardholderNameTextField:
             viewModel.cardholderName = textField.text ?? ""
         case cardNumberTextField:
@@ -181,162 +208,169 @@ class PaymentViewController: UIViewController {
     }
 
     @objc private func confirmButtonTapped() {
-        CartViewModel.shared.clearCart()
-        navigationController?.popToRootViewController(animated: true)
-    }
-
-    @objc private func textFieldDidChange(_ textField: UITextField) {
-        if textField == cardNumberTextField && textField.text?.count ?? 0 > 16 {
-            textField.text = String(textField.text?.prefix(16) ?? "")
-        } else if textField == cvcTextField && textField.text?.count ?? 0 > 3 {
-            textField.text = String(textField.text?.prefix(3) ?? "")
-        } else if (textField == expiryMonthTextField || textField == expiryYearTextField) && textField.text?.count ?? 0 > 2 {
-            textField.text = String(textField.text?.prefix(2) ?? "")
+            viewModel.confirmOrder()
+            navigationController?.popToRootViewController(animated: true)
         }
-        updateConfirmButtonState()
-    }
 
-    private func updateConfirmButtonState() {
-        let isFormValid = viewModel.isFormValid
-        
-        confirmButton.isEnabled = isFormValid
-        confirmButton.backgroundColor = isFormValid ? UIColor(named: "ButtonColor") : .systemGray
-    }
-
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-
-    @objc private func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-        
-        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
-        scrollView.contentInset = contentInsets
-        scrollView.scrollIndicatorInsets = contentInsets
-
-        var aRect = self.view.frame
-        aRect.size.height -= keyboardFrame.height
-        if let activeField = view.findFirstResponder() as? UIView {
-            if !aRect.contains(activeField.frame.origin) {
-                scrollView.scrollRectToVisible(activeField.frame, animated: true)
+        @objc private func textFieldDidChange(_ textField: UITextField) {
+            switch textField {
+            case cityTextField:
+                viewModel.city = textField.text ?? ""
+            case districtTextField:
+                viewModel.district = textField.text ?? ""
+            case neighborhoodTextField:
+                viewModel.street = textField.text ?? ""
+            case cardholderNameTextField:
+                viewModel.cardholderName = textField.text ?? ""
+            case cardNumberTextField:
+                viewModel.cardNumber = textField.text ?? ""
+            case expiryMonthTextField:
+                viewModel.expiryMonth = textField.text ?? ""
+            case expiryYearTextField:
+                viewModel.expiryYear = textField.text ?? ""
+            case cvcTextField:
+                viewModel.cvc = textField.text ?? ""
+            default:
+                break
             }
+
+            // Handle max lengths for specific fields
+            if textField == cardNumberTextField && textField.text?.count ?? 0 > 16 {
+                textField.text = String(textField.text?.prefix(16) ?? "")
+            } else if textField == cvcTextField && textField.text?.count ?? 0 > 3 {
+                textField.text = String(textField.text?.prefix(3) ?? "")
+            } else if (textField == expiryMonthTextField || textField == expiryYearTextField) && textField.text?.count ?? 0 > 2 {
+                textField.text = String(textField.text?.prefix(2) ?? "")
+            }
+
+            updateConfirmButtonState()
         }
-    }
 
-    @objc private func keyboardWillHide(notification: NSNotification) {
-        let contentInsets = UIEdgeInsets.zero
-        scrollView.contentInset = contentInsets
-        scrollView.scrollIndicatorInsets = contentInsets
-    }
+        private func updateConfirmButtonState() {
+            let isFormValid = viewModel.isFormValid
+            confirmButton.isEnabled = isFormValid
+            confirmButton.backgroundColor = isFormValid ? UIColor(named: "ButtonColor") : .systemGray
+        }
 
-    private func setupTapGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
-    }
+        private func setupKeyboardObservers() {
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        }
 
-    @objc private func dismissKeyboard() {
-        view.endEditing(true)
-    }
+        @objc private func keyboardWillShow(notification: NSNotification) {
+            guard let userInfo = notification.userInfo,
+                  let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+            
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
+            scrollView.contentInset = contentInsets
+            scrollView.scrollIndicatorInsets = contentInsets
+        }
 
-    private func createLabel(text: String) -> UILabel {
+        @objc private func keyboardWillHide(notification: NSNotification) {
+            let contentInsets = UIEdgeInsets.zero
+            scrollView.contentInset = contentInsets
+            scrollView.scrollIndicatorInsets = contentInsets
+        }
+
+        private func setupTapGesture() {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            view.addGestureRecognizer(tapGesture)
+        }
+
+        @objc private func dismissKeyboard() {
+            view.endEditing(true)
+        }
+
+        private func createTextField(placeholder: String, keyboardType: UIKeyboardType = .default) -> UITextField {
+            let textField = UITextField()
+            textField.placeholder = placeholder
+            textField.borderStyle = .roundedRect
+            textField.translatesAutoresizingMaskIntoConstraints = false
+            textField.keyboardType = keyboardType
+            return textField
+        }
+
+        private func createTextView(placeholder: String) -> UITextView {
+            let textView = UITextView()
+            textView.layer.borderWidth = 1
+            textView.layer.borderColor = UIColor.lightGray.cgColor
+            textView.layer.cornerRadius = 8
+            textView.textColor = .placeholderText
+            textView.font = .systemFont(ofSize: 17)
+            textView.translatesAutoresizingMaskIntoConstraints = false
+            return textView
+        }
+
+        private func createLabel(text: String) -> UILabel {
+            let label = UILabel()
+            label.text = text
+            label.font = .boldSystemFont(ofSize: 20)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }
+
+    private func createLabelWithSwitch(text: String, switchControl: UISwitch) -> UIStackView {
         let label = UILabel()
         label.text = text
-        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }
 
-    private func createTextField(placeholder: String, keyboardType: UIKeyboardType = .default) -> UITextField {
-        let textField = UITextField()
-        textField.placeholder = placeholder
-        textField.borderStyle = .roundedRect
-        textField.keyboardType = keyboardType
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
-    }
-
-    private func createTextView(placeholder: String) -> UITextView {
-        let textView = UITextView()
-        textView.text = placeholder
-        textView.textColor = .lightGray
-        textView.layer.borderWidth = 1
-        textView.layer.borderColor = UIColor.lightGray.cgColor
-        textView.layer.cornerRadius = 5
-        textView.font = UIFont.systemFont(ofSize: 16)
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        return textView
-    }
-
-    private func expiryMonthYearStackView() -> UIStackView {
-        let stackView = UIStackView(arrangedSubviews: [expiryMonthTextField, expiryYearTextField])
+        let stackView = UIStackView(arrangedSubviews: [label, switchControl])
         stackView.axis = .horizontal
         stackView.spacing = 8
-        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
         return stackView
     }
-}
 
-extension PaymentViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // Handle max lengths for specific fields
-        if textField == cardNumberTextField {
-            let maxLength = 16
-            let currentString: NSString = textField.text! as NSString
+
+        private func expiryMonthYearStackView() -> UIStackView {
+            let stackView = UIStackView(arrangedSubviews: [expiryMonthTextField, expiryYearTextField])
+            stackView.axis = .horizontal
+            stackView.spacing = 8
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            return stackView
+        }
+    }
+
+    // MARK: - UITextFieldDelegate
+    extension PaymentViewController: UITextFieldDelegate {
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            let maxLength: Int
+            if textField == cardNumberTextField {
+                maxLength = 16
+            } else if textField == cvcTextField {
+                maxLength = 3
+            } else if textField == expiryMonthTextField || textField == expiryYearTextField {
+                maxLength = 2
+            } else {
+                maxLength = 100
+            }
+            
+            let currentString: NSString = textField.text as NSString? ?? ""
             let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
             return newString.length <= maxLength
-        } else if textField == cvcTextField {
-            let maxLength = 3
-            let currentString: NSString = textField.text! as NSString
-            let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-            return newString.length <= maxLength
-        } else if textField == expiryMonthTextField || textField == expiryYearTextField {
-            let maxLength = 2
-            let currentString: NSString = textField.text! as NSString
-            let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-            return newString.length <= maxLength
-        }
-        return true
-    }
-}
-
-extension PaymentViewController: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == .placeholderText {
-            textView.text = ""
-            textView.textColor = .label
         }
     }
 
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = textView == addressTextView ? "Address Details" : "Address Description (Optional)"
-            textView.textColor = .placeholderText
-        }
-        updateViewModelForTextView(textView)
-    }
-
-    private func updateViewModelForTextView(_ textView: UITextView) {
-        if textView == addressTextView {
-            viewModel.address = textView.text == "Address Details" ? "" : textView.text
-        } else if textView == addressDescriptionTextView {
-            viewModel.addressDescription = textView.text == "Address Description (Optional)" ? "" : textView.text
-        }
-        updateConfirmButtonState()
-    }
-}
-
-extension UIView {
-    func findFirstResponder() -> UIResponder? {
-        if self.isFirstResponder {
-            return self
-        }
-        for subview in self.subviews {
-            if let firstResponder = subview.findFirstResponder() {
-                return firstResponder
+    // MARK: - UITextViewDelegate
+    extension PaymentViewController: UITextViewDelegate {
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            if textView.textColor == .placeholderText {
+                textView.text = nil
+                textView.textColor = .label
             }
         }
-        return nil
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            if textView.text.isEmpty {
+                textView.text = textView == addressTextView ? "Address Details" : "Address Description (Optional)"
+                textView.textColor = .placeholderText
+            }
+            if textView == addressTextView {
+                viewModel.address = textView.text
+            } else if textView == addressDescriptionTextView {
+                viewModel.addressDescription = textView.text
+            }
+            updateConfirmButtonState()
+        }
     }
-}

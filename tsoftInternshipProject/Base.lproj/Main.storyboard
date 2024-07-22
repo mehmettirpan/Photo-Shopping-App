@@ -105,12 +105,15 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="Cart" id="9uc-wd-ThG"/>
+                    <connections>
+                        <segue destination="tAH-2D-UGS" kind="show" id="GmB-ik-cES"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Ga-Fn-CFT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2090.8396946564885" y="734.50704225352115"/>
         </scene>
-        <!--View Controller-->
+        <!--Payment-->
         <scene sceneID="mdf-Nd-kYo">
             <objects>
                 <viewController id="tAH-2D-UGS" sceneMemberID="viewController">
@@ -120,10 +123,31 @@
                         <viewLayoutGuide key="safeArea" id="Tds-uU-4hp"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Payment" id="Mun-2m-qff"/>
+                    <connections>
+                        <segue destination="ECb-Qs-QXT" kind="show" id="cQ5-9n-2BL"/>
+                        <segue destination="JMa-lz-aHx" kind="show" id="xce-b9-oMR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jwy-XI-tS8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2990" y="735"/>
+        </scene>
+        <!--Saved Cards-->
+        <scene sceneID="c9r-MZ-HcS">
+            <objects>
+                <viewController id="ECb-Qs-QXT" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5sc-1A-otv">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="T1Y-FQ-jYx"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Saved Cards" id="DxP-Xr-stO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZqZ-vN-dfb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4024" y="453"/>
         </scene>
         <!--Profile-->
         <scene sceneID="WLy-6F-rYv">
@@ -136,6 +160,11 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="Profile" id="NSp-It-xjS"/>
+                    <connections>
+                        <segue destination="ECb-Qs-QXT" kind="show" id="haU-ON-J2V"/>
+                        <segue destination="JMa-lz-aHx" kind="show" id="AHe-gg-PiB"/>
+                        <segue destination="OBU-lE-qud" kind="show" id="PnZ-US-my7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FTo-gU-QLc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -271,7 +300,62 @@
             </objects>
             <point key="canvasLocation" x="1056" y="1460"/>
         </scene>
+        <!--Saved Addresses-->
+        <scene sceneID="a5x-1I-oZL">
+            <objects>
+                <viewController id="JMa-lz-aHx" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yY2-Cz-D9C">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="UcA-0J-ZAV"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Saved Addresses" id="K6c-MG-rdH"/>
+                    <connections>
+                        <segue destination="Jq4-6B-Hhk" kind="show" id="zRZ-ss-tJt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YV3-pB-hOb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4024" y="1110"/>
+        </scene>
+        <!--Saved Address Detail View Controller-->
+        <scene sceneID="fiv-0p-qqi">
+            <objects>
+                <viewController id="Jq4-6B-Hhk" customClass="SavedAddressDetailViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="IUY-yD-1xL">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="i48-iu-SPc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="BHf-Pt-x6z"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j8k-Qz-NO3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4969" y="1110"/>
+        </scene>
+        <!--My Orders-->
+        <scene sceneID="ySF-Ax-vSQ">
+            <objects>
+                <viewController id="OBU-lE-qud" customClass="MyOrdersViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7w5-Ad-g2x">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="ueA-49-bVX"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="My Orders" id="pgU-xQ-SpR"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="udc-UQ-3S3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4024" y="1862"/>
+        </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="xce-b9-oMR"/>
+        <segue reference="haU-ON-J2V"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="cart" catalog="system" width="128" height="102"/>
         <image name="heart" catalog="system" width="128" height="107"/>
