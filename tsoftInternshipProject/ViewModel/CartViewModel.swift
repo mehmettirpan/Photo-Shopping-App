@@ -11,6 +11,9 @@ class CartViewModel {
     static let shared = CartViewModel()
     private let cartKey = "cartItems"
 
+    // Notification name for cart changes
+    static let cartChangedNotification = Notification.Name("CartChangedNotification")
+    
     private init() {
         loadCartItems()
     }
@@ -29,11 +32,15 @@ class CartViewModel {
             items.append(item)
             saveCartItems()
         }
+        notifyCartChanged()
+
     }
     
     func clearCart() {
-            items.removeAll()
-        }
+        items.removeAll()
+        saveCartItems()
+        notifyCartChanged()
+    }
 
     func updateQuantity(at index: Int, quantity: Int) {
         guard index >= 0 && index < items.count else {
@@ -42,6 +49,7 @@ class CartViewModel {
         }
         items[index].quantity = quantity
         saveCartItems()
+        notifyCartChanged()
     }
 
     func removeItem(at index: Int) {
@@ -51,6 +59,7 @@ class CartViewModel {
         }
         items.remove(at: index)
         saveCartItems()
+        notifyCartChanged()
     }
 
     func totalPrice() -> Double {
@@ -71,5 +80,9 @@ class CartViewModel {
                 items = loadedItems
             }
         }
+    }
+    
+    private func notifyCartChanged() {
+        NotificationCenter.default.post(name: CartViewModel.cartChangedNotification, object: nil)
     }
 }

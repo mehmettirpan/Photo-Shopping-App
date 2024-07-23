@@ -24,9 +24,9 @@ class PaymentViewController: UIViewController {
     private var confirmButton: UIButton!
     private var saveAddressSwitch: UISwitch!
     private var saveCardSwitch: UISwitch!
-    let addressTitleTextField = UITextField()
-
-
+    private let addressTitleTextField = UITextField()
+    private var cartViewModel = CartViewModel.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -208,9 +208,10 @@ class PaymentViewController: UIViewController {
     }
 
     @objc private func confirmButtonTapped() {
-            viewModel.confirmOrder()
-            navigationController?.popToRootViewController(animated: true)
-        }
+        viewModel.confirmOrder()
+        navigationController?.popToRootViewController(animated: true)
+        cartViewModel.clearCart()
+    }
 
         @objc private func textFieldDidChange(_ textField: UITextField) {
             switch textField {

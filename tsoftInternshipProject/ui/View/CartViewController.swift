@@ -90,6 +90,14 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
     private func reloadCart() {
         collectionView.reloadData()
         totalPriceLabel.text = "Total: $\(String(format: "%.2f", viewModel.totalPrice()))"
+        
+        if viewModel.cartItems.isEmpty {
+            confirmButton.isEnabled = false
+            confirmButton.backgroundColor = .gray  // Set color to gray when disabled
+        } else {
+            confirmButton.isEnabled = true
+            confirmButton.backgroundColor = UIColor(named: "ButtonColor")  // Restore original color when enabled
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

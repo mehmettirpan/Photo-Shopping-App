@@ -93,4 +93,25 @@ extension SavedCardsViewController: UITableViewDelegate, UITableViewDataSource {
         
         print(details)
     }
+    
+    // Implementing swipe-to-delete functionality
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            let cardToDelete = savedCards[indexPath.row]
+            context.delete(cardToDelete)
+            
+            do {
+                try context.save()
+                savedCards.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            } catch {
+                print("Failed to delete card: \(error)")
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
 }
