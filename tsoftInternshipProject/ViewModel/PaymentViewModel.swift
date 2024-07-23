@@ -65,7 +65,7 @@ class PaymentViewModel {
         let isAddressValid = !city.isEmpty && !district.isEmpty && !street.isEmpty && !address.isEmpty
         let isPaymentValid = !cardholderName.isEmpty && cardNumber.count == 16 && !expiryMonth.isEmpty && !expiryYear.isEmpty && cvc.count == 3
         
-        isFormValid = isAddressValid && isPaymentValid
+        isFormValid = isAddressValid && isPaymentValid && isExpiryDateValid()
     }
     
     func confirmOrder() {
@@ -122,4 +122,21 @@ class PaymentViewModel {
         expiryYear = ""
         cvc = ""
     }
+    
+    private func isExpiryDateValid() -> Bool {
+            guard let month = Int(expiryMonth), let year = Int(expiryYear) else {
+                return false
+            }
+
+            let currentDate = Date()
+            let calendar = Calendar.current
+            let currentYear = calendar.component(.year, from: currentDate) % 100
+            let currentMonth = calendar.component(.month, from: currentDate)
+
+            if year < currentYear || (year == currentYear && month <= currentMonth) {
+                return false
+            }
+
+            return month >= 1 && month <= 12
+        }
 }
