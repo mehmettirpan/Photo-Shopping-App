@@ -346,10 +346,29 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="My Orders" id="pgU-xQ-SpR"/>
+                    <connections>
+                        <segue destination="Jzh-aV-tb5" kind="show" id="kaS-EY-pk2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="udc-UQ-3S3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4024" y="1862"/>
+        </scene>
+        <!--Order Details View Controller-->
+        <scene sceneID="oaK-JR-VGA">
+            <objects>
+                <viewController storyboardIdentifier="OrderDetailsVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jzh-aV-tb5" customClass="OrderDetailsViewController" customModule="tsoftInternshipProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qh8-xh-jRM">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="7BQ-hK-Y4b"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="pBp-11-Hbf"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oI2-4P-Lgm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4969" y="1862"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

@@ -10,6 +10,8 @@ import CoreData
 import UIKit
 
 class PaymentViewModel {
+    private var orders: [Order] = []
+    
     var city: String = "" {
         didSet { validateForm() }
     }
@@ -72,11 +74,11 @@ class PaymentViewModel {
         if addressSwitchOn {
             saveAddress()
         }
-        
         if cardSwitchOn {
             saveCard()
         }
-        
+        // Create and save order
+        saveOrder()
         // Clear form
         clearForm()
     }
@@ -109,6 +111,32 @@ class PaymentViewModel {
             print("Failed to save card: \(error)")
         }
     }
+    
+    private func saveOrder() {
+        let order = Order(context: context)
+        // Ürün bilgilerini kaydet
+        let productsString = CartViewModel.shared.cartItems.map { $0.tags }.joined(separator: " - ")
+        order.productNames = productsString
+        // Adres bilgilerini kaydet
+        order.address = "\(city), \(district), \(street), \(address)"
+        // Kart bilgilerini kaydet
+        let maskedCardNumber = String(cardNumber.suffix(4))
+        order.cardInfo = "\(cardholderName),  ****\(maskedCardNumber)"
+        // Toplam fiyatı kaydet
+        order.totalAmount = CartViewModel.shared.totalPrice()
+        // Eklenme tarihini kaydet
+        order.addedDate = Date()
+        
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save order: \(error)")
+        }
+        // Sepeti sıfırla
+        CartViewModel.shared.clearCart()
+    }
+
+
     
     private func clearForm() {
         city = ""

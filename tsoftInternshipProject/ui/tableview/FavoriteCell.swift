@@ -135,7 +135,7 @@ class FavoriteCell: UICollectionViewCell {
         }
         
         // Create a cart item
-        let cartItem = CartItem(id: Int(viewModel.id), image: image, price: price, quantity: 1)
+        let cartItem = CartItem(id: Int(viewModel.id), image: image, price: price, quantity: 1, tags: viewModel.tags ?? "")
         
         // Add to cart and print the cart state
         CartViewModel.shared.addItem(cartItem)

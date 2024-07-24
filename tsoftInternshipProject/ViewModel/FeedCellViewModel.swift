@@ -31,6 +31,10 @@ class FeedCellViewModel {
     var id: Int {
         return imageItem.id
     }
+    
+    var tags: String{
+        return imageItem.tags
+    }
 
     func toggleFavoriteStatus() {
         let manager = FavoriteManager.shared
@@ -41,4 +45,6 @@ class FeedCellViewModel {
         }
         isLiked = !isLiked
     }
+    
+    
 }

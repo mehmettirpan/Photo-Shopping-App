@@ -129,27 +129,28 @@ class FeedCell: UICollectionViewCell {
             print("Error: viewModel is nil")
             return
         }
-        
+
         // Ensure imageView has an image
         guard let image = imageView.image else {
             print("Error: Image view does not have an image")
             return
         }
-        
+
         // Ensure price is correctly formatted and converted
         guard let price = Double(viewModel.idWithDecimal) else {
             print("Error: Could not convert idWithDecimal to price")
             return
         }
-        
+
         // Create a cart item
-        let cartItem = CartItem(id: viewModel.id, image: image, price: price, quantity: 1)
-        
+        let cartItem = CartItem(id: viewModel.id, image: image, price: price, quantity: 1, tags: viewModel.tags)
+
         // Add to cart and print the cart state
         CartViewModel.shared.addItem(cartItem)
         print("Added item to cart: \(cartItem)")
         print("Current cart items: \(CartViewModel.shared.cartItems)")
     }
+
 
     public func configure() {
         guard let viewModel = viewModel else { return }

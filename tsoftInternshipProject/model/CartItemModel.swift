@@ -12,10 +12,10 @@ struct CartItem: Codable {
     let image: UIImage
     let price: Double
     var quantity: Int
-    
+    let tags: String // Add this property
 
     private enum CodingKeys: String, CodingKey {
-        case id, image, price, quantity
+        case id, image, price, quantity, tags
     }
 
     // Custom encoding to handle UIImage
@@ -27,6 +27,7 @@ struct CartItem: Codable {
         }
         try container.encode(price, forKey: .price)
         try container.encode(quantity, forKey: .quantity)
+        try container.encode(tags, forKey: .tags)
     }
 
     // Custom decoding to handle UIImage
@@ -37,12 +38,14 @@ struct CartItem: Codable {
         image = UIImage(data: imageData) ?? UIImage()
         price = try container.decode(Double.self, forKey: .price)
         quantity = try container.decode(Int.self, forKey: .quantity)
+        tags = try container.decode(String.self, forKey: .tags)
     }
 
-    init(id: Int, image: UIImage, price: Double, quantity: Int) {
+    init(id: Int, image: UIImage, price: Double, quantity: Int, tags: String) {
         self.id = id
         self.image = image
         self.price = price
         self.quantity = quantity
+        self.tags = tags
     }
 }

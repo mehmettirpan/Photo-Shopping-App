@@ -23,6 +23,17 @@
         <attribute name="views" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="webFormatUrl" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="Order" representedClassName="Order" syncable="YES" codeGenerationType="class">
+        <attribute name="addedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="address" optional="YES" attributeType="String"/>
+        <attribute name="cardInfo" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="imageUrls" optional="YES" attributeType="String"/>
+        <attribute name="productNames" optional="YES" attributeType="String"/>
+        <attribute name="productPrices" optional="YES" attributeType="String"/>
+        <attribute name="productQuantities" optional="YES" attributeType="String"/>
+        <attribute name="totalAmount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
     <entity name="SavedAddress" representedClassName="SavedAddress" syncable="YES" codeGenerationType="class">
         <attribute name="addressDescription" optional="YES" attributeType="String"/>
         <attribute name="addressDetails" optional="YES" attributeType="String"/>
