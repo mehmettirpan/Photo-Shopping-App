@@ -8,7 +8,12 @@
 import UIKit
 import CoreData
 
+protocol SavedCardsViewControllerDelegate: AnyObject {
+    func didSelectCard(_ card: Card)
+}
+
 class SavedCardsViewController: UIViewController {
+    weak var delegate: SavedCardsViewControllerDelegate?
     var savedCards: [Card] = []
 
     override func viewDidLoad() {
@@ -73,25 +78,8 @@ extension SavedCardsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let card = savedCards[indexPath.row]
-        printCardDetails(card: card)
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    private func printCardDetails(card: Card) {
-        let cardholderName = card.cardholderName ?? "N/A"
-        let cardNumber = card.cardNumber ?? "N/A"
-        let expiryMonth = card.expiryMonth ?? "N/A"
-        let expiryYear = card.expiryYear ?? "N/A"
-        let cvc = card.cvc ?? "N/A"
-        
-        let details = """
-        Cardholder Name: \(cardholderName)
-        Card Number: \(cardNumber)
-        Expiry Date: \(expiryMonth)/\(expiryYear)
-        CVC: \(cvc)
-        """
-        
-        print(details)
+        delegate?.didSelectCard(card)
+        navigationController?.popViewController(animated: true)
     }
     
     // Implementing swipe-to-delete functionality

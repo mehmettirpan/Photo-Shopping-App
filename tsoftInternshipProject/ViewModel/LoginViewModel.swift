@@ -23,7 +23,9 @@ class LoginViewModel {
                 suite: "Suite 100",
                 city: "Istanbul",
                 zipcode: "34000",
-                geo: Geo(lat: "41.0082", lng: "28.9784"), district: "Fatih"
+                geo: Geo(lat: "41.0082", lng: "28.9784"), 
+                district: "Fatih",
+                details: "Mavi Bar'ın Yanı Mor Bina"
             ),
             phone: "+90 212 123 45 67",
             website: "www.mehmettirpan.com",
