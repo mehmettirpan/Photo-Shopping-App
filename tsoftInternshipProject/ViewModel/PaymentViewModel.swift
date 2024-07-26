@@ -10,7 +10,6 @@ import CoreData
 import UIKit
 
 class PaymentViewModel {
-    
     private var orders: [Order] = []
     
     var city: String = "" {
@@ -21,15 +20,19 @@ class PaymentViewModel {
         didSet { validateForm() }
     }
     
-    var neighborhood: String = "" {
+    var street: String = "" {
         didSet { validateForm() }
     }
     
-    var addressDetails: String = "" {
+    var address: String = "" {
         didSet { validateForm() }
     }
     
     var addressDescription: String = "" {
+        didSet { validateForm() }
+    }
+    
+    var neighborhood: String = "" {
         didSet { validateForm() }
     }
     
@@ -61,7 +64,7 @@ class PaymentViewModel {
     var cardSwitchOn: Bool = false
     
     private func validateForm() {
-        let isAddressValid = !city.isEmpty && !district.isEmpty && !neighborhood.isEmpty && !addressDetails.isEmpty
+        let isAddressValid = !city.isEmpty && !district.isEmpty && !street.isEmpty && !address.isEmpty
         let isPaymentValid = !cardholderName.isEmpty && cardNumber.count == 16 && !expiryMonth.isEmpty && !expiryYear.isEmpty && cvc.count == 3
         
         isFormValid = isAddressValid && isPaymentValid && isExpiryDateValid()
@@ -84,9 +87,10 @@ class PaymentViewModel {
         let savedAddress = SavedAddress(context: context)
         savedAddress.city = city
         savedAddress.district = district
-        savedAddress.neighborhood = neighborhood
-        savedAddress.addressDetails = addressDetails
+        savedAddress.street = street
+        savedAddress.addressDetails = address
         savedAddress.addressDescription = addressDescription
+        savedAddress.neighborhood = neighborhood
         do {
             try context.save()
         } catch {
@@ -95,12 +99,12 @@ class PaymentViewModel {
     }
     
     private func saveCard() {
-        let savedCard = Card(context: context)
-        savedCard.cardholderName = cardholderName
-        savedCard.cardNumber = cardNumber
-        savedCard.expiryMonth = expiryMonth
-        savedCard.expiryYear = expiryYear
-        savedCard.cvc = cvc
+        let savedCards = Card(context: context)
+        savedCards.cardholderName = cardholderName
+        savedCards.cardNumber = cardNumber
+        savedCards.expiryMonth = expiryMonth
+        savedCards.expiryYear = expiryYear
+        savedCards.cvc = cvc
         do {
             try context.save()
         } catch {
@@ -114,7 +118,7 @@ class PaymentViewModel {
         let productsString = CartViewModel.shared.cartItems.map { $0.tags }.joined(separator: " - ")
         order.productNames = productsString
         // Adres bilgilerini kaydet
-        order.address = "\(city), \(district), \(neighborhood), \(addressDetails)"
+        order.address = "\(city), \(district), \(street), \(address)"
         // Kart bilgilerini kaydet
         let maskedCardNumber = String(cardNumber.suffix(4))
         order.cardInfo = "\(cardholderName),  ****\(maskedCardNumber)"
@@ -131,12 +135,14 @@ class PaymentViewModel {
         // Sepeti sıfırla
         CartViewModel.shared.clearCart()
     }
+
+
     
     private func clearForm() {
         city = ""
         district = ""
-        neighborhood = ""
-        addressDetails = ""
+        street = ""
+        address = ""
         addressDescription = ""
         cardholderName = ""
         cardNumber = ""
@@ -146,45 +152,19 @@ class PaymentViewModel {
     }
     
     private func isExpiryDateValid() -> Bool {
-        guard let month = Int(expiryMonth), let year = Int(expiryYear) else {
-            return false
+            guard let month = Int(expiryMonth), let year = Int(expiryYear) else {
+                return false
+            }
+
+            let currentDate = Date()
+            let calendar = Calendar.current
+            let currentYear = calendar.component(.year, from: currentDate) % 100
+            let currentMonth = calendar.component(.month, from: currentDate)
+
+            if year < currentYear || (year == currentYear && month <= currentMonth) {
+                return false
+            }
+
+            return month >= 1 && month <= 12
         }
-
-        let currentDate = Date()
-        let calendar = Calendar.current
-        let currentYear = calendar.component(.year, from: currentDate) % 100
-        let currentMonth = calendar.component(.month, from: currentDate)
-
-        if year < currentYear || (year == currentYear && month <= currentMonth) {
-            return false
-        }
-
-        return month >= 1 && month <= 12
-    }
-    
-    func reset() {
-        clearForm()
-        addressSwitchOn = false
-        cardSwitchOn = false
-        isFormValid = false
-    }
-    
-    // Yeni fonksiyonlar
-    func useSavedCard(_ card: Card) {
-        cardholderName = card.cardholderName ?? ""
-        cardNumber = card.cardNumber ?? ""
-        expiryMonth = card.expiryMonth ?? ""
-        expiryYear = card.expiryYear ?? ""
-        cvc = card.cvc ?? ""
-        validateForm()
-    }
-    
-    func useSavedAddress(_ address: SavedAddress) {
-        city = address.city ?? ""
-        district = address.district ?? ""
-        neighborhood = address.neighborhood ?? ""
-        addressDetails = address.addressDetails ?? ""
-        addressDescription = address.addressDescription ?? ""
-        validateForm()
-    }
 }

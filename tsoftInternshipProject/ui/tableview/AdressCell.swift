@@ -9,21 +9,21 @@ import UIKit
 
 class AddressTableViewCell: UITableViewCell {
     private let addressLabel = UILabel()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
+        setupViews()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func setupUI() {
+
+    private func setupViews() {
         addressLabel.numberOfLines = 0
         addressLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(addressLabel)
-        
+
         NSLayoutConstraint.activate([
             addressLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             addressLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
@@ -31,8 +31,8 @@ class AddressTableViewCell: UITableViewCell {
             addressLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15)
         ])
     }
-    
-    func configure(with address: SavedAddress) {
-        addressLabel.text = address.addressDetails
+
+    func configure(with text: String) {
+        addressLabel.text = text
     }
 }

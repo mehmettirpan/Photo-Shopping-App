@@ -25,7 +25,6 @@ struct Address: Codable {
     let zipcode: String
     let geo: Geo
     var district: String
-    var details: String
 }
 
 struct Geo: Codable {
