@@ -8,12 +8,14 @@
 import UIKit
 
 class PaymentViewController: UIViewController {
+//    MARK: Properties
     private var viewModel = PaymentViewModel()
     private var scrollView: UIScrollView!
     private var contentView: UIView!
     private var cityTextField: UITextField!
     private var districtTextField: UITextField!
     private var neighborhoodTextField: UITextField!
+    private var streetTextField: UITextField!
     private var addressTextView: UITextView!
     private var addressDescriptionTextView: UITextView!
     private var cardholderNameTextField: UITextField!
@@ -26,9 +28,13 @@ class PaymentViewController: UIViewController {
     private var saveCardSwitch: UISwitch!
     private let addressTitleTextField = UITextField()
     private var cartViewModel = CartViewModel.shared
+    private var savedAddressButton: UIButton!
+    private var savedCardButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Payment"
+        
         setupUI()
         setupBindings()
         updateConfirmButtonState()
@@ -41,7 +47,8 @@ class PaymentViewController: UIViewController {
         addressDescriptionTextView.text = "Address Description (Optional)"
         addressDescriptionTextView.textColor = .placeholderText
     }
-
+    
+//  MARK: SetupUI
     private func setupUI() {
         view.backgroundColor = .systemBackground
 
@@ -53,22 +60,23 @@ class PaymentViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         
-        let addressLabel = createLabel(text: "Address")
-        let paymentLabel = createLabel(text: "Payment")
+        let addressLabel = viewModel.createLabel(text: "Address")
+        let paymentLabel = viewModel.createLabel(text: "Payment")
 
-        cityTextField = createTextField(placeholder: "City")
-        districtTextField = createTextField(placeholder: "District")
-        neighborhoodTextField = createTextField(placeholder: "Neighborhood")
-        addressTextView = createTextView(placeholder: "Address Details")
-        addressDescriptionTextView = createTextView(placeholder: "Address Description (Optional)")
-        cardholderNameTextField = createTextField(placeholder: "Cardholder Name")
-        cardNumberTextField = createTextField(placeholder: "Card Number (16 digits)", keyboardType: .numberPad)
+        cityTextField = viewModel.createTextField(placeholder: "City")
+        districtTextField = viewModel.createTextField(placeholder: "District")
+        neighborhoodTextField = viewModel.createTextField(placeholder: "Neighborhood")
+        streetTextField = viewModel.createTextField(placeholder: "Street")
+        addressTextView = viewModel.createTextView(placeholder: "Address Details")
+        addressDescriptionTextView = viewModel.createTextView(placeholder: "Address Description (Optional)")
+        cardholderNameTextField = viewModel.createTextField(placeholder: "Cardholder Name")
+        cardNumberTextField = viewModel.createTextField(placeholder: "Card Number (16 digits)", keyboardType: .numberPad)
         cardNumberTextField.delegate = self
-        expiryMonthTextField = createTextField(placeholder: "MM", keyboardType: .numberPad)
+        expiryMonthTextField = viewModel.createTextField(placeholder: "MM", keyboardType: .numberPad)
         expiryMonthTextField.delegate = self
-        expiryYearTextField = createTextField(placeholder: "YY", keyboardType: .numberPad)
+        expiryYearTextField = viewModel.createTextField(placeholder: "YY", keyboardType: .numberPad)
         expiryYearTextField.delegate = self
-        cvcTextField = createTextField(placeholder: "CVC (3 digits)", keyboardType: .numberPad)
+        cvcTextField = viewModel.createTextField(placeholder: "CVC (3 digits)", keyboardType: .numberPad)
         cvcTextField.isSecureTextEntry = true
         cvcTextField.delegate = self
 
@@ -89,7 +97,18 @@ class PaymentViewController: UIViewController {
         saveCardSwitch.translatesAutoresizingMaskIntoConstraints = false
         saveCardSwitch.addTarget(self, action: #selector(saveCardSwitchChanged), for: .valueChanged)
         
-        
+        // Saved Address Button
+        savedAddressButton = UIButton(type: .system)
+        savedAddressButton.setTitle("Use Saved Address", for: .normal)
+        savedAddressButton.addTarget(self, action: #selector(savedAddressButtonTapped), for: .touchUpInside)
+        savedAddressButton.translatesAutoresizingMaskIntoConstraints = false
+
+        // Saved Card Button
+        savedCardButton = UIButton(type: .system)
+        savedCardButton.setTitle("Use Saved Card", for: .normal)
+        savedCardButton.addTarget(self, action: #selector(savedCardButtonTapped), for: .touchUpInside)
+        savedCardButton.translatesAutoresizingMaskIntoConstraints = false
+
 
         // Create address stack view with vertical axis
         let addressStackView = UIStackView(arrangedSubviews: [
@@ -97,9 +116,10 @@ class PaymentViewController: UIViewController {
             cityTextField,
             districtTextField,
             neighborhoodTextField,
+            streetTextField,
             addressTextView,
             addressDescriptionTextView,
-            createLabelWithSwitch(text: "Save Address", switchControl: saveAddressSwitch)
+            viewModel.createLabelWithSwitch(text: "Save Address", switchControl: saveAddressSwitch)
         ])
         addressStackView.axis = .vertical
         addressStackView.spacing = 8
@@ -112,18 +132,21 @@ class PaymentViewController: UIViewController {
             cardNumberTextField,
             expiryMonthYearStackView(),
             cvcTextField,
-            createLabelWithSwitch(text: "Save Card", switchControl: saveCardSwitch)
+            viewModel.createLabelWithSwitch(text: "Save Card", switchControl: saveCardSwitch)
         ])
         paymentStackView.axis = .vertical
         paymentStackView.spacing = 8
         paymentStackView.translatesAutoresizingMaskIntoConstraints = false
 
-        // Create main stack view
+        // Add buttons to main stack view
         let mainStackView = UIStackView(arrangedSubviews: [
             addressStackView,
+            savedAddressButton,
             paymentStackView,
+            savedCardButton,
             confirmButton
         ])
+        
         mainStackView.axis = .vertical
         mainStackView.spacing = 16
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -160,20 +183,14 @@ class PaymentViewController: UIViewController {
         addressDescriptionTextView.delegate = self
     }
 
-
-    @objc private func saveAddressSwitchChanged(_ sender: UISwitch) {
-        viewModel.addressSwitchOn = sender.isOn
-    }
-
-    @objc private func saveCardSwitchChanged(_ sender: UISwitch) {
-        viewModel.cardSwitchOn = sender.isOn
-    }
+//  MARK: UI Functions
 
     private func setupBindings() {
         // Bindings from ViewModel to UI (for simplicity, we use target-action approach here)
         cityTextField.addTarget(self, action: #selector(updateViewModel(_:)), for: .editingChanged)
         districtTextField.addTarget(self, action: #selector(updateViewModel(_:)), for: .editingChanged)
         neighborhoodTextField.addTarget(self, action: #selector(updateViewModel(_:)), for: .editingChanged)
+        streetTextField.addTarget(self, action: #selector(updateViewModel(_:)), for: .editingChanged)
         addressTextView.delegate = self
         addressDescriptionTextView.delegate = self
         cardholderNameTextField.addTarget(self, action: #selector(updateViewModel(_:)), for: .editingChanged)
@@ -190,6 +207,8 @@ class PaymentViewController: UIViewController {
         case districtTextField:
             viewModel.district = textField.text ?? ""
         case neighborhoodTextField:
+            viewModel.neighborhood = textField.text ?? ""
+        case streetTextField:
             viewModel.street = textField.text ?? ""
         case cardholderNameTextField:
             viewModel.cardholderName = textField.text ?? ""
@@ -207,131 +226,112 @@ class PaymentViewController: UIViewController {
         updateConfirmButtonState()
     }
 
+    @objc func saveAddressSwitchChanged(_ sender: UISwitch) {
+        viewModel.addressSwitchOn = sender.isOn
+    }
+
+    @objc func saveCardSwitchChanged(_ sender: UISwitch) {
+        viewModel.cardSwitchOn = sender.isOn
+    }
+    
     @objc private func confirmButtonTapped() {
         viewModel.confirmOrder()
         navigationController?.popToRootViewController(animated: true)
         cartViewModel.clearCart()
     }
 
-        @objc private func textFieldDidChange(_ textField: UITextField) {
-            switch textField {
-            case cityTextField:
-                viewModel.city = textField.text ?? ""
-            case districtTextField:
-                viewModel.district = textField.text ?? ""
-            case neighborhoodTextField:
-                viewModel.street = textField.text ?? ""
-            case cardholderNameTextField:
-                viewModel.cardholderName = textField.text ?? ""
-            case cardNumberTextField:
-                viewModel.cardNumber = textField.text ?? ""
-            case expiryMonthTextField:
-                viewModel.expiryMonth = textField.text ?? ""
-            case expiryYearTextField:
-                viewModel.expiryYear = textField.text ?? ""
-            case cvcTextField:
-                viewModel.cvc = textField.text ?? ""
-            default:
-                break
-            }
-
-            // Handle max lengths for specific fields
-            if textField == cardNumberTextField && textField.text?.count ?? 0 > 16 {
-                textField.text = String(textField.text?.prefix(16) ?? "")
-            } else if textField == cvcTextField && textField.text?.count ?? 0 > 3 {
-                textField.text = String(textField.text?.prefix(3) ?? "")
-            } else if (textField == expiryMonthTextField || textField == expiryYearTextField) && textField.text?.count ?? 0 > 2 {
-                textField.text = String(textField.text?.prefix(2) ?? "")
-            }
-
-            updateConfirmButtonState()
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        switch textField {
+        case cityTextField:
+            viewModel.city = textField.text ?? ""
+        case districtTextField:
+            viewModel.district = textField.text ?? ""
+        case neighborhoodTextField:
+            viewModel.neighborhood = textField.text ?? ""
+        case streetTextField:
+            viewModel.street = textField.text ?? ""
+        case cardholderNameTextField:
+            viewModel.cardholderName = textField.text ?? ""
+        case cardNumberTextField:
+            viewModel.cardNumber = textField.text ?? ""
+        case expiryMonthTextField:
+            viewModel.expiryMonth = textField.text ?? ""
+        case expiryYearTextField:
+            viewModel.expiryYear = textField.text ?? ""
+        case cvcTextField:
+            viewModel.cvc = textField.text ?? ""
+        default:
+            break
         }
 
-        private func updateConfirmButtonState() {
-            let isFormValid = viewModel.isFormValid
-            confirmButton.isEnabled = isFormValid
-            confirmButton.backgroundColor = isFormValid ? UIColor(named: "ButtonColor") : .systemGray
+        // Handle max lengths for specific fields
+        if textField == cardNumberTextField && textField.text?.count ?? 0 > 16 {
+            textField.text = String(textField.text?.prefix(16) ?? "")
+        } else if textField == cvcTextField && textField.text?.count ?? 0 > 3 {
+            textField.text = String(textField.text?.prefix(3) ?? "")
+        } else if (textField == expiryMonthTextField || textField == expiryYearTextField) && textField.text?.count ?? 0 > 2 {
+            textField.text = String(textField.text?.prefix(2) ?? "")
         }
 
-        private func setupKeyboardObservers() {
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        }
+        updateConfirmButtonState()
+    }
 
-        @objc private func keyboardWillShow(notification: NSNotification) {
-            guard let userInfo = notification.userInfo,
-                  let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-            
-            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
-            scrollView.contentInset = contentInsets
-            scrollView.scrollIndicatorInsets = contentInsets
-        }
+    private func updateConfirmButtonState() {
+        let isFormValid = viewModel.isFormValid
+        confirmButton.isEnabled = isFormValid
+        confirmButton.backgroundColor = isFormValid ? UIColor(named: "ButtonColor") : .systemGray
+    }
+    
+    @objc private func savedAddressButtonTapped() {
+        let savedAddressesVC = SavedAddressesViewController()
+        savedAddressesVC.delegate = self
+        navigationController?.pushViewController(savedAddressesVC, animated: true)
+    }
 
-        @objc private func keyboardWillHide(notification: NSNotification) {
-            let contentInsets = UIEdgeInsets.zero
-            scrollView.contentInset = contentInsets
-            scrollView.scrollIndicatorInsets = contentInsets
-        }
+    @objc private func savedCardButtonTapped() {
+        let savedCardsVC = SavedCardsViewController()
+        savedCardsVC.delegate = self
+        navigationController?.pushViewController(savedCardsVC, animated: true)
+    }
 
-        private func setupTapGesture() {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-            view.addGestureRecognizer(tapGesture)
-        }
 
-        @objc private func dismissKeyboard() {
-            view.endEditing(true)
-        }
+    private func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
 
-        private func createTextField(placeholder: String, keyboardType: UIKeyboardType = .default) -> UITextField {
-            let textField = UITextField()
-            textField.placeholder = placeholder
-            textField.borderStyle = .roundedRect
-            textField.translatesAutoresizingMaskIntoConstraints = false
-            textField.keyboardType = keyboardType
-            return textField
-        }
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
 
-        private func createTextView(placeholder: String) -> UITextView {
-            let textView = UITextView()
-            textView.layer.borderWidth = 1
-            textView.layer.borderColor = UIColor.lightGray.cgColor
-            textView.layer.cornerRadius = 8
-            textView.textColor = .placeholderText
-            textView.font = .systemFont(ofSize: 17)
-            textView.translatesAutoresizingMaskIntoConstraints = false
-            return textView
-        }
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
 
-        private func createLabel(text: String) -> UILabel {
-            let label = UILabel()
-            label.text = text
-            label.font = .boldSystemFont(ofSize: 20)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
 
-    private func createLabelWithSwitch(text: String, switchControl: UISwitch) -> UIStackView {
-        let label = UILabel()
-        label.text = text
-        label.translatesAutoresizingMaskIntoConstraints = false
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 
-        let stackView = UIStackView(arrangedSubviews: [label, switchControl])
+    private func expiryMonthYearStackView() -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: [expiryMonthTextField, expiryYearTextField])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
-
         return stackView
     }
-
-
-        private func expiryMonthYearStackView() -> UIStackView {
-            let stackView = UIStackView(arrangedSubviews: [expiryMonthTextField, expiryYearTextField])
-            stackView.axis = .horizontal
-            stackView.spacing = 8
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            return stackView
-        }
-    }
+}
 
     // MARK: - UITextFieldDelegate
     extension PaymentViewController: UITextFieldDelegate {
@@ -375,3 +375,44 @@ class PaymentViewController: UIViewController {
             updateConfirmButtonState()
         }
     }
+// MARK: - SavedAddressesVCDelegate
+
+extension PaymentViewController: SavedAddressesViewControllerDelegate {
+    func didSelectSavedAddress(_ address: SavedAddress) {
+        viewModel.city = address.city ?? ""
+        viewModel.district = address.district ?? ""
+        viewModel.neighborhood = address.neighborhood ?? ""
+        viewModel.street = address.street ?? ""
+        viewModel.address = address.addressDetails ?? ""
+        viewModel.addressDescription = address.addressDescription ?? ""
+
+        cityTextField.text = address.city
+        districtTextField.text = address.district
+        neighborhoodTextField.text = address.neighborhood
+        streetTextField.text = address.street
+        addressTextView.text = address.addressDetails
+        addressDescriptionTextView.text = address.addressDescription
+
+        updateConfirmButtonState()
+    }
+}
+
+// MARK: - SavedCarsVCDelegate
+
+extension PaymentViewController: SavedCardsViewControllerDelegate {
+    func didSelectSavedCard(_ card: Card) {
+        viewModel.cardholderName = card.cardholderName ?? ""
+        viewModel.cardNumber = card.cardNumber ?? ""
+        viewModel.expiryMonth = card.expiryMonth ?? ""
+        viewModel.expiryYear = card.expiryYear ?? ""
+        viewModel.cvc = card.cvc ?? ""
+
+        cardholderNameTextField.text = card.cardholderName
+        cardNumberTextField.text = card.cardNumber
+        expiryMonthTextField.text = card.expiryMonth
+        expiryYearTextField.text = card.expiryYear
+        cvcTextField.text = card.cvc
+
+        updateConfirmButtonState()
+    }
+}

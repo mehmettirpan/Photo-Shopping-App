@@ -8,9 +8,15 @@
 import UIKit
 import CoreData
 
+protocol SavedAddressesViewControllerDelegate: AnyObject {
+    func didSelectSavedAddress(_ address: SavedAddress)
+}
+
 class SavedAddressesViewController: UIViewController {
     var savedAddresses: [SavedAddress] = []
     private var tableView: UITableView!
+    weak var delegate: SavedAddressesViewControllerDelegate?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +53,11 @@ class SavedAddressesViewController: UIViewController {
         let detailVC = SavedAddressDetailViewController()
         detailVC.isNewAddress = true
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func addressSelected(_ address: SavedAddress) {
+        delegate?.didSelectSavedAddress(address)
+        navigationController?.popViewController(animated: true)
     }
 
     private func fetchSavedAddresses() {

@@ -10,52 +10,19 @@ import CoreData
 import UIKit
 
 class PaymentViewModel {
+    
     private var orders: [Order] = []
-    
-    var city: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var district: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var street: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var address: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var addressDescription: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var neighborhood: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var cardholderName: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var cardNumber: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var expiryMonth: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var expiryYear: String = "" {
-        didSet { validateForm() }
-    }
-    
-    var cvc: String = "" {
-        didSet { validateForm() }
-    }
-    
+    var city: String = "" { didSet { validateForm() }}
+    var district: String = "" { didSet { validateForm() }}
+    var street: String = "" { didSet { validateForm() }}
+    var address: String = "" { didSet { validateForm() }}
+    var addressDescription: String = "" { didSet { validateForm() }}
+    var neighborhood: String = "" { didSet { validateForm() }}
+    var cardholderName: String = "" { didSet { validateForm() }}
+    var cardNumber: String = "" { didSet { validateForm() }}
+    var expiryMonth: String = "" { didSet { validateForm() }}
+    var expiryYear: String = "" { didSet { validateForm() }}
+    var cvc: String = "" { didSet { validateForm() }}
     var isFormValid: Bool = false
     
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -64,7 +31,7 @@ class PaymentViewModel {
     var cardSwitchOn: Bool = false
     
     private func validateForm() {
-        let isAddressValid = !city.isEmpty && !district.isEmpty && !street.isEmpty && !address.isEmpty
+        let isAddressValid = !city.isEmpty && !district.isEmpty && !street.isEmpty && !address.isEmpty && !neighborhood.isEmpty
         let isPaymentValid = !cardholderName.isEmpty && cardNumber.count == 16 && !expiryMonth.isEmpty && !expiryYear.isEmpty && cvc.count == 3
         
         isFormValid = isAddressValid && isPaymentValid && isExpiryDateValid()
@@ -87,6 +54,7 @@ class PaymentViewModel {
         let savedAddress = SavedAddress(context: context)
         savedAddress.city = city
         savedAddress.district = district
+        savedAddress.neighborhood = neighborhood
         savedAddress.street = street
         savedAddress.addressDetails = address
         savedAddress.addressDescription = addressDescription
@@ -118,7 +86,7 @@ class PaymentViewModel {
         let productsString = CartViewModel.shared.cartItems.map { $0.tags }.joined(separator: " - ")
         order.productNames = productsString
         // Adres bilgilerini kaydet
-        order.address = "\(city), \(district), \(street), \(address)"
+        order.address = "\(city), \(district), \(neighborhood), \(street), \(address)"
         // Kart bilgilerini kaydet
         let maskedCardNumber = String(cardNumber.suffix(4))
         order.cardInfo = "\(cardholderName),  ****\(maskedCardNumber)"
@@ -141,6 +109,7 @@ class PaymentViewModel {
     private func clearForm() {
         city = ""
         district = ""
+        neighborhood = ""
         street = ""
         address = ""
         addressDescription = ""
@@ -167,4 +136,49 @@ class PaymentViewModel {
 
             return month >= 1 && month <= 12
         }
+    
+
+    
+    func createTextField(placeholder: String, keyboardType: UIKeyboardType = .default) -> UITextField {
+        let textField = UITextField()
+        textField.placeholder = placeholder
+        textField.borderStyle = .roundedRect
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.keyboardType = keyboardType
+        return textField
+    }
+
+    func createTextView(placeholder: String) -> UITextView {
+        let textView = UITextView()
+        textView.layer.borderWidth = 1
+        textView.layer.borderColor = UIColor.lightGray.cgColor
+        textView.layer.cornerRadius = 8
+        textView.textColor = .placeholderText
+        textView.font = .systemFont(ofSize: 17)
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
+    }
+
+    func createLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = .boldSystemFont(ofSize: 20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+
+    func createLabelWithSwitch(text: String, switchControl: UISwitch) -> UIStackView {
+        let label = UILabel()
+        label.text = text
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView(arrangedSubviews: [label, switchControl])
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        return stackView
+    }
+
+    
 }

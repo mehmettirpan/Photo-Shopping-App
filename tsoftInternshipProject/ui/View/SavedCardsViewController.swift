@@ -8,8 +8,14 @@
 import UIKit
 import CoreData
 
+protocol SavedCardsViewControllerDelegate: AnyObject {
+    func didSelectSavedCard(_ card: Card)
+}
+
 class SavedCardsViewController: UIViewController {
     var savedCards: [Card] = []
+    weak var delegate: SavedCardsViewControllerDelegate?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,6 +81,11 @@ extension SavedCardsViewController: UITableViewDelegate, UITableViewDataSource {
         let card = savedCards[indexPath.row]
         printCardDetails(card: card)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func cardSelected(_ card: Card) {
+        delegate?.didSelectSavedCard(card)
+        navigationController?.popViewController(animated: true)
     }
     
     private func printCardDetails(card: Card) {
