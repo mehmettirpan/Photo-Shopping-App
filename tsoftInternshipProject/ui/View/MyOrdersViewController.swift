@@ -80,7 +80,7 @@ class MyOrdersViewController: UIViewController, UITableViewDataSource, UITableVi
         
         // Pass data to OrderDetailsViewController
         orderDetailsVC.order = order
-        
+        tableView.deselectRow(at: indexPath, animated: true) // seçilen öğenin arkaplanın seçili kalmamasını sağlar
         navigationController?.pushViewController(orderDetailsVC, animated: true)
     }
     
