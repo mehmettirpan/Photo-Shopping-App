@@ -40,13 +40,6 @@ class PaymentViewController: UIViewController {
         updateConfirmButtonState()
         setupKeyboardObservers()
         setupTapGesture()
-        
-        addressTextView.text = "Address Details"
-        addressTextView.textColor = .placeholderText
-        
-        addressDescriptionTextView.text = "Address Description (Optional)"
-        addressDescriptionTextView.textColor = .placeholderText
-        
     }
     
 //  MARK: SetupUI
@@ -61,15 +54,18 @@ class PaymentViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         
-        let addressLabel = viewModel.createLabel(text: "Address")
-        let paymentLabel = viewModel.createLabel(text: "Payment")
+        let addressLabel = viewModel.createTitleLabel(text: "Address")
+        let paymentLabel = viewModel.createTitleLabel(text: "Credit Card")
+        
+        let addressDetailLabel = viewModel.createDescriptionLabel(text: "Enter your addresses detail")
+        let addressDescriptionLabel = viewModel.createDescriptionLabel(text: "Enter your address description (Optional)")
 
         cityTextField = viewModel.createTextField(placeholder: "City")
         districtTextField = viewModel.createTextField(placeholder: "District")
         neighborhoodTextField = viewModel.createTextField(placeholder: "Neighborhood")
         streetTextField = viewModel.createTextField(placeholder: "Street")
-        addressTextView = viewModel.createTextView(placeholder: "Address Details")
-        addressDescriptionTextView = viewModel.createTextView(placeholder: "Address Description (Optional)")
+        addressTextView = viewModel.createTextView()
+        addressDescriptionTextView = viewModel.createTextView()
         cardholderNameTextField = viewModel.createTextField(placeholder: "Cardholder Name")
         cardNumberTextField = viewModel.createTextField(placeholder: "Card Number (16 digits)", keyboardType: .numberPad)
         cardNumberTextField.delegate = self
@@ -118,7 +114,9 @@ class PaymentViewController: UIViewController {
             districtTextField,
             neighborhoodTextField,
             streetTextField,
+            addressDetailLabel,
             addressTextView,
+            addressDescriptionLabel,
             addressDescriptionTextView,
             viewModel.createLabelWithSwitch(text: "Save Address", switchControl: saveAddressSwitch)
         ])
@@ -366,10 +364,10 @@ class PaymentViewController: UIViewController {
         }
 
         func textViewDidEndEditing(_ textView: UITextView) {
-            if textView.text.isEmpty {
-                textView.text = textView == addressTextView ? "Address Details" : "Address Description (Optional)"
-                textView.textColor = .placeholderText
-            }
+//            if textView.text.isEmpty {
+//                textView.text = textView == addressTextView ? "Address Details" : "Address Description (Optional)"
+//                textView.textColor = .placeholderText
+//            }
             if textView == addressTextView {
                 viewModel.address = textView.text
             } else if textView == addressDescriptionTextView {

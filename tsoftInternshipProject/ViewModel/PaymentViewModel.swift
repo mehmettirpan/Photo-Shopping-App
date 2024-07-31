@@ -148,7 +148,7 @@ class PaymentViewModel {
         return textField
     }
 
-    func createTextView(placeholder: String) -> UITextView {
+    func createTextView() -> UITextView {
         let textView = UITextView()
         textView.layer.borderWidth = 1
         textView.layer.borderColor = UIColor.lightGray.cgColor
@@ -159,10 +159,18 @@ class PaymentViewModel {
         return textView
     }
 
-    func createLabel(text: String) -> UILabel {
+    func createTitleLabel(text: String) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.font = .boldSystemFont(ofSize: 20)
+        label.font = .boldSystemFont(ofSize: 25)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+    
+    func createDescriptionLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = .systemFont(ofSize: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
