@@ -12,11 +12,16 @@ protocol SavedAddressesViewControllerDelegate: AnyObject {
     func didSelectSavedAddress(_ address: SavedAddress)
 }
 
+enum PreviousScreen {
+    case payment
+    case profile
+}
+
 class SavedAddressesViewController: UIViewController {
     var savedAddresses: [SavedAddress] = []
     private var tableView: UITableView!
     weak var delegate: SavedAddressesViewControllerDelegate?
-
+    var previousScreen: PreviousScreen?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +32,7 @@ class SavedAddressesViewController: UIViewController {
         setupAddButton()
         fetchSavedAddresses()
     }
-    
+
     private func setupTableView() {
         tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +48,7 @@ class SavedAddressesViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
     }
-    
+
     private func setupAddButton() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
         navigationItem.rightBarButtonItem = addButton
@@ -57,7 +62,13 @@ class SavedAddressesViewController: UIViewController {
     
     func addressSelected(_ address: SavedAddress) {
         delegate?.didSelectSavedAddress(address)
-        navigationController?.popViewController(animated: true)
+        if previousScreen == .payment {
+            navigationController?.popViewController(animated: true)
+        } else if previousScreen == .profile {
+            let detailVC = SavedAddressDetailViewController()
+            detailVC.address = address
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
     }
 
     private func fetchSavedAddresses() {
@@ -108,10 +119,8 @@ extension SavedAddressesViewController: UITableViewDelegate, UITableViewDataSour
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedAddress = savedAddresses[indexPath.row]
-        let detailVC = SavedAddressDetailViewController()
-        detailVC.address = selectedAddress
-        navigationController?.pushViewController(detailVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
+        addressSelected(selectedAddress)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {

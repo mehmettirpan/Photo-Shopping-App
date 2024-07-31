@@ -46,6 +46,7 @@ class PaymentViewController: UIViewController {
         
         addressDescriptionTextView.text = "Address Description (Optional)"
         addressDescriptionTextView.textColor = .placeholderText
+        
     }
     
 //  MARK: SetupUI
@@ -284,13 +285,13 @@ class PaymentViewController: UIViewController {
     
     @objc private func savedAddressButtonTapped() {
         let savedAddressesVC = SavedAddressesViewController()
-        savedAddressesVC.delegate = self
+        savedAddressesVC.previousScreen = .payment
         navigationController?.pushViewController(savedAddressesVC, animated: true)
     }
 
     @objc private func savedCardButtonTapped() {
         let savedCardsVC = SavedCardsViewController()
-        savedCardsVC.delegate = self
+        savedCardsVC.previousScreen = .payment
         navigationController?.pushViewController(savedCardsVC, animated: true)
     }
 

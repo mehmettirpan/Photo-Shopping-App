@@ -223,11 +223,13 @@ class ProfileViewController: UIViewController {
     
     @objc func showSavedAddresses() {
         let savedAddressesVC = SavedAddressesViewController()
+        savedAddressesVC.previousScreen = .profile
         navigationController?.pushViewController(savedAddressesVC, animated: true)
     }
-    
+
     @objc func showSavedCards() {
         let savedCardsVC = SavedCardsViewController()
+        savedCardsVC.previousScreen = .profile
         navigationController?.pushViewController(savedCardsVC, animated: true)
     }
     
@@ -249,4 +251,5 @@ class ProfileViewController: UIViewController {
             print("Failed to load user from UserDefaults")
         }
     }
+
 }

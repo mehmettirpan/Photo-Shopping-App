@@ -15,7 +15,7 @@ protocol SavedCardsViewControllerDelegate: AnyObject {
 class SavedCardsViewController: UIViewController {
     var savedCards: [Card] = []
     weak var delegate: SavedCardsViewControllerDelegate?
-
+    var previousScreen: PreviousScreen?  // Add this property
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +39,7 @@ class SavedCardsViewController: UIViewController {
         
         fetchSavedCards()
     }
-    
+
     private func fetchSavedCards() {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<Card> = Card.fetchRequest()
@@ -56,6 +56,32 @@ class SavedCardsViewController: UIViewController {
         let lastTwo = cardNumber.suffix(2)
         let masked = String(repeating: "*", count: cardNumber.count - 4)
         return "\(firstTwo)\(masked)\(lastTwo)"
+    }
+
+    func cardSelected(_ card: Card) {
+        if previousScreen == .payment {
+                navigationController?.popViewController(animated: true)
+        }else if previousScreen == .profile{
+            delegate?.didSelectSavedCard(card)
+//            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    private func printCardDetails(card: Card) {
+        let cardholderName = card.cardholderName ?? "N/A"
+        let cardNumber = card.cardNumber ?? "N/A"
+        let expiryMonth = card.expiryMonth ?? "N/A"
+        let expiryYear = card.expiryYear ?? "N/A"
+        let cvc = card.cvc ?? "N/A"
+        
+        let details = """
+        Cardholder Name: \(cardholderName)
+        Card Number: \(cardNumber)
+        Expiry Date: \(expiryMonth)/\(expiryYear)
+        CVC: \(cvc)
+        """
+        
+        print(details)
     }
 }
 
@@ -79,33 +105,11 @@ extension SavedCardsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let card = savedCards[indexPath.row]
-        printCardDetails(card: card)
+        cardSelected(card)
         tableView.deselectRow(at: indexPath, animated: true)
+        printCardDetails(card: card)
     }
-    
-    func cardSelected(_ card: Card) {
-        delegate?.didSelectSavedCard(card)
-        navigationController?.popViewController(animated: true)
-    }
-    
-    private func printCardDetails(card: Card) {
-        let cardholderName = card.cardholderName ?? "N/A"
-        let cardNumber = card.cardNumber ?? "N/A"
-        let expiryMonth = card.expiryMonth ?? "N/A"
-        let expiryYear = card.expiryYear ?? "N/A"
-        let cvc = card.cvc ?? "N/A"
-        
-        let details = """
-        Cardholder Name: \(cardholderName)
-        Card Number: \(cardNumber)
-        Expiry Date: \(expiryMonth)/\(expiryYear)
-        CVC: \(cvc)
-        """
-        
-        print(details)
-    }
-    
-    // Implementing swipe-to-delete functionality
+
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -126,3 +130,5 @@ extension SavedCardsViewController: UITableViewDelegate, UITableViewDataSource {
         return true
     }
 }
+
+
