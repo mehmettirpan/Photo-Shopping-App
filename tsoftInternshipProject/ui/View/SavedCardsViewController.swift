@@ -59,10 +59,10 @@ class SavedCardsViewController: UIViewController {
     }
 
     func cardSelected(_ card: Card) {
+        delegate?.didSelectSavedCard(card)
         if previousScreen == .payment {
                 navigationController?.popViewController(animated: true)
         }else if previousScreen == .profile{
-            delegate?.didSelectSavedCard(card)
 //            navigationController?.popViewController(animated: true)
         }
     }

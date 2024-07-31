@@ -286,12 +286,14 @@ class PaymentViewController: UIViewController {
     @objc private func savedAddressButtonTapped() {
         let savedAddressesVC = SavedAddressesViewController()
         savedAddressesVC.previousScreen = .payment
+        savedAddressesVC.delegate = self
         navigationController?.pushViewController(savedAddressesVC, animated: true)
     }
 
     @objc private func savedCardButtonTapped() {
         let savedCardsVC = SavedCardsViewController()
         savedCardsVC.previousScreen = .payment
+        savedCardsVC.delegate = self
         navigationController?.pushViewController(savedCardsVC, animated: true)
     }
 
