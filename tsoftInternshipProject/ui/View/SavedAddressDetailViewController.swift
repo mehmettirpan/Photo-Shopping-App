@@ -8,11 +8,13 @@
 import UIKit
 import CoreData
 
-class SavedAddressDetailViewController: UIViewController {
+class SavedAddressDetailViewController: UIViewController, UITextFieldDelegate {
     var address: SavedAddress?
     var isNewAddress: Bool = false
-
+    
     private var isEditingAddress = false
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private let addressTitleTextField = UITextField()
     private let cityTextField = UITextField()
     private let districtTextField = UITextField()
@@ -20,18 +22,42 @@ class SavedAddressDetailViewController: UIViewController {
     private let addressDetailsTextField = UITextField()
     private let addressDescriptionTextField = UITextField()
     private let neighborhoodTextField = UITextField()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .systemBackground
         self.title = "Address Details"
         
+        setupScrollView()
         setupTextFields()
         setupEditButton()
         displayAddressDetails()
         toggleEditing(enabled: isNewAddress)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+    }
+    
     private func setupTextFields() {
         let addressTitleLabel = createLabel(with: "Address Title")
         let cityLabel = createLabel(with: "City")
@@ -40,7 +66,7 @@ class SavedAddressDetailViewController: UIViewController {
         let addressDetailsLabel = createLabel(with: "Address Details")
         let addressDescriptionLabel = createLabel(with: "Address Description")
         let neighborhoodLabel = createLabel(with: "Neighborhood")
-
+        
         styleTextField(addressTitleTextField, placeholder: "Enter address title")
         styleTextField(cityTextField, placeholder: "Enter city")
         styleTextField(districtTextField, placeholder: "Enter district")
@@ -48,7 +74,15 @@ class SavedAddressDetailViewController: UIViewController {
         styleTextField(addressDetailsTextField, placeholder: "Enter address details")
         styleTextField(addressDescriptionTextField, placeholder: "Enter address description")
         styleTextField(neighborhoodTextField, placeholder: "Enter neighborhood")
-
+        
+        addressTitleTextField.delegate = self
+        cityTextField.delegate = self
+        districtTextField.delegate = self
+        streetTextField.delegate = self
+        addressDetailsTextField.delegate = self
+        addressDescriptionTextField.delegate = self
+        neighborhoodTextField.delegate = self
+        
         let stackView = UIStackView(arrangedSubviews: [
             addressTitleLabel, addressTitleTextField,
             cityLabel, cityTextField,
@@ -61,14 +95,42 @@ class SavedAddressDetailViewController: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(stackView)
-
+        contentView.addSubview(stackView)
+        
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20)
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
+    
+    @objc private func keyboardWillShow(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        
+        let keyboardHeight = keyboardFrame.height
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    @objc private func keyboardWillHide(notification: Notification) {
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
 
     private func createLabel(with text: String) -> UILabel {
         let label = UILabel()
@@ -81,6 +143,8 @@ class SavedAddressDetailViewController: UIViewController {
         textField.borderStyle = .roundedRect
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.placeholder = placeholder
+        textField.isUserInteractionEnabled = true // Kullanıcı etkileşimi açık
+
     }
 
     private func setupEditButton() {

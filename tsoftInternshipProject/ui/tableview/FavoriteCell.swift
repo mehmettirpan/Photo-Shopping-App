@@ -118,6 +118,7 @@ class FavoriteCell: UICollectionViewCell {
     }
 
     @objc private func addToCartButtonTapped() {
+        animateButtonTitleChange()
         guard let viewModel = viewModel else {
             print("Error: viewModel is nil")
             return
@@ -152,6 +153,21 @@ class FavoriteCell: UICollectionViewCell {
         tagsLabel.text = "Tags: \(viewModel?.tags ?? "")"
         priceLabel.text = "\(viewModel!.idWithDecimal)$"
         favoriteButton.isSelected = viewModel?.isLiked ?? false
+    }
+    
+    private func animateButtonTitleChange() {
+        UIView.transition(with: addToCartButton, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            self.addToCartButton.setTitle("Added to Cart", for: .normal)
+            self.addToCartButton.backgroundColor = .systemGray
+        }) { _ in
+            // Revert back to original title after a delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                UIView.transition(with: self.addToCartButton, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    self.addToCartButton.setTitle("Add to Cart", for: .normal)
+                    self.addToCartButton.backgroundColor = UIColor(named: "ButtonColor")
+                })
+            }
+        }
     }
 }
 

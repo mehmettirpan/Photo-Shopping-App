@@ -149,8 +149,25 @@ class FeedCell: UICollectionViewCell {
         CartViewModel.shared.addItem(cartItem)
         print("Added item to cart: \(cartItem)")
         print("Current cart items: \(CartViewModel.shared.cartItems)")
+        
+        // Animate button title change
+        animateButtonTitleChange()
     }
 
+    private func animateButtonTitleChange() {
+        UIView.transition(with: addToCartButton, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            self.addToCartButton.setTitle("Added to Cart", for: .normal)
+            self.addToCartButton.backgroundColor = .systemGray
+        }) { _ in
+            // Revert back to original title after a delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                UIView.transition(with: self.addToCartButton, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    self.addToCartButton.setTitle("Add to Cart", for: .normal)
+                    self.addToCartButton.backgroundColor = UIColor(named: "ButtonColor")
+                })
+            }
+        }
+    }
 
     public func configure() {
         guard let viewModel = viewModel else { return }

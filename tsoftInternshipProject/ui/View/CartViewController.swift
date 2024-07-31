@@ -79,7 +79,6 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
         ])
         
         confirmButton.addTarget(self, action: #selector(confirmCartButtonTapped), for: .touchUpInside)
-
     }
     
     @objc private func confirmCartButtonTapped() {
@@ -97,6 +96,13 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
         } else {
             confirmButton.isEnabled = true
             confirmButton.backgroundColor = UIColor(named: "ButtonColor")  // Restore original color when enabled
+        }
+        
+        // Update the tab bar item badge value
+        if let tabBarItems = tabBarController?.tabBar.items {
+            let cartTabBarItem = tabBarItems[3] // Assuming the cart is the second item, adjust index if necessary
+            cartTabBarItem.badgeValue = viewModel.cartItems.count > 0 ? "\(viewModel.cartItems.count)" : nil
+            cartTabBarItem.badgeColor = .red // Optional: Set badge color
         }
     }
     
@@ -126,8 +132,7 @@ class CartViewController: UIViewController, UICollectionViewDataSource, UICollec
             item.quantity -= 1
             viewModel.updateQuantity(at: index, quantity: item.quantity)
             reloadCart()
-        }else{
-//            print("Decrease Quantity Else çalıştı")
+        } else {
             viewModel.removeItem(at: index)
             reloadCart()
         }

@@ -32,6 +32,11 @@ class SavedAddressesViewController: UIViewController {
         setupAddButton()
         fetchSavedAddresses()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchSavedAddresses()  // Verileri yenilemek için fetchSavedAddresses çağrılır
+    }
 
     private func setupTableView() {
         tableView = UITableView()
