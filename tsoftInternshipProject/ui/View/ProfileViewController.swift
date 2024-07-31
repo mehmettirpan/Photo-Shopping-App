@@ -111,7 +111,7 @@ class ProfileViewController: UIViewController {
         logoutButton = UIButton(type: .system)
         logoutButton.setTitle("Logout", for: .normal)
         logoutButton.setTitleColor(.white, for: .normal)
-        logoutButton.backgroundColor = .systemRed
+        logoutButton.backgroundColor = .red
         logoutButton.layer.cornerRadius = 8
         logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
@@ -207,6 +207,7 @@ class ProfileViewController: UIViewController {
             mapView.addAnnotation(annotation)
             let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
             mapView.setRegion(region, animated: true)
+            mapView.layer.cornerRadius = 8
         }
     }
     @objc func logoutButtonTapped() {

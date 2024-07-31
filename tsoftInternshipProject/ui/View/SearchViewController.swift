@@ -86,30 +86,45 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     }
 
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder() // Klavyeyi kapatır
+        guard let query = searchBar.text, !query.isEmpty else { return }
+
+        viewModel.searchImages(query: query) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+                if case let .failure(error) = result {
+                    print("Error fetching images: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.numberOfItems()
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchScreenImageCell", for: indexPath) as! SearchCell
-        let item = viewModel.item(at: indexPath.item)
-        cell.configure(with: item)
+        if let item = viewModel.item(at: indexPath.item) {
+            cell.configure(with: item)
+        }
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let item = viewModel.item(at: indexPath.item)
         let width: CGFloat = (collectionView.frame.width - 30) / 3 // 3 sütunlu düzen için
         let height = width
         return CGSize(width: width, height: height)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = viewModel.item(at: indexPath.item)
-        let detailVC = DetailViewController()
-        let detailViewModel = DetailViewModel(item: item)
-        detailVC.viewModel = detailViewModel
-        navigationController?.pushViewController(detailVC, animated: true)
+        if let item = viewModel.item(at: indexPath.item) {
+            let detailVC = DetailViewController()
+            let detailViewModel = DetailViewModel(item: item)
+            detailVC.viewModel = detailViewModel
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -118,5 +133,9 @@ class SearchViewController: UIViewController, UICollectionViewDelegate, UICollec
         if offsetY > contentHeight - scrollView.frame.height - 100 { // 100 is the buffer value
             fetchImages()
         }
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.resignFirstResponder() // Ekran kaydırılmaya başlandığında klavyeyi kapatır
     }
 }

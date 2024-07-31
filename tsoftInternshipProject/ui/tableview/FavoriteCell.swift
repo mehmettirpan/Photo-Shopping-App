@@ -37,6 +37,7 @@ class FavoriteCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 4
         contentView.addSubview(imageView)
 
         stackView.axis = .vertical

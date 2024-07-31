@@ -57,7 +57,8 @@ class SearchViewModel {
         return items.count
     }
     
-    func item(at index: Int) -> ImageItem {
+    func item(at index: Int) -> ImageItem? {
+        guard index >= 0 && index < items.count else { return nil }
         return items[index]
     }
     
