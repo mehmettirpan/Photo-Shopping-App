@@ -26,3 +26,11 @@
   - screen with registered cards and addresses
   - payment screen
   - payment steps
+
+
+
+https://github.com/user-attachments/assets/41ce1291-67c7-42cd-9342-6fd5ccbfbfca
+
+
+
+
