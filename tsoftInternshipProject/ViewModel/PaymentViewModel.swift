@@ -159,18 +159,10 @@ class PaymentViewModel {
         return textView
     }
 
-    func createTitleLabel(text: String) -> UILabel {
+    func createLabel(text: String, font: UIFont) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.font = .boldSystemFont(ofSize: 25)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }
-    
-    func createDescriptionLabel(text: String) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.font = .systemFont(ofSize: 15)
+        label.font = font
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }

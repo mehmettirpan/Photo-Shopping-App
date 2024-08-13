@@ -54,11 +54,11 @@ class PaymentViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         
-        let addressLabel = viewModel.createTitleLabel(text: "Address")
-        let paymentLabel = viewModel.createTitleLabel(text: "Credit Card")
+        let addressLabel = viewModel.createLabel(text: "Address", font: .systemFont(ofSize: 25))
+        let paymentLabel = viewModel.createLabel(text: "Credit Card",font: .systemFont(ofSize: 25))
         
-        let addressDetailLabel = viewModel.createDescriptionLabel(text: "Enter your addresses detail")
-        let addressDescriptionLabel = viewModel.createDescriptionLabel(text: "Enter your address description (Optional)")
+        let addressDetailLabel = viewModel.createLabel(text: "Enter your addresses detail",font: .systemFont(ofSize: 15))
+        let addressDescriptionLabel = viewModel.createLabel(text: "Enter your address description (Optional)",font: .systemFont(ofSize: 15))
 
         cityTextField = viewModel.createTextField(placeholder: "City")
         districtTextField = viewModel.createTextField(placeholder: "District")
@@ -335,47 +335,47 @@ class PaymentViewController: UIViewController {
 }
 
     // MARK: - UITextFieldDelegate
-    extension PaymentViewController: UITextFieldDelegate {
-        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            let maxLength: Int
-            if textField == cardNumberTextField {
-                maxLength = 16
-            } else if textField == cvcTextField {
-                maxLength = 3
-            } else if textField == expiryMonthTextField || textField == expiryYearTextField {
-                maxLength = 2
-            } else {
-                maxLength = 100
-            }
-            
-            let currentString: NSString = textField.text as NSString? ?? ""
-            let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-            return newString.length <= maxLength
+extension PaymentViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let maxLength: Int
+        if textField == cardNumberTextField {
+            maxLength = 16
+        } else if textField == cvcTextField {
+            maxLength = 3
+        } else if textField == expiryMonthTextField || textField == expiryYearTextField {
+            maxLength = 2
+        } else {
+            maxLength = 100
+        }
+        
+        let currentString: NSString = textField.text as NSString? ?? ""
+        let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+        return newString.length <= maxLength
+    }
+}
+
+//      MARK: - UITextViewDelegate
+extension PaymentViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == .placeholderText {
+            textView.text = nil
+            textView.textColor = .label
         }
     }
 
-    // MARK: - UITextViewDelegate
-    extension PaymentViewController: UITextViewDelegate {
-        func textViewDidBeginEditing(_ textView: UITextView) {
-            if textView.textColor == .placeholderText {
-                textView.text = nil
-                textView.textColor = .label
-            }
-        }
-
-        func textViewDidEndEditing(_ textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
 //            if textView.text.isEmpty {
 //                textView.text = textView == addressTextView ? "Address Details" : "Address Description (Optional)"
 //                textView.textColor = .placeholderText
 //            }
-            if textView == addressTextView {
-                viewModel.address = textView.text
-            } else if textView == addressDescriptionTextView {
-                viewModel.addressDescription = textView.text
-            }
-            updateConfirmButtonState()
+        if textView == addressTextView {
+            viewModel.address = textView.text
+        } else if textView == addressDescriptionTextView {
+            viewModel.addressDescription = textView.text
         }
+        updateConfirmButtonState()
     }
+}
 // MARK: - SavedAddressesVCDelegate
 
 extension PaymentViewController: SavedAddressesViewControllerDelegate {
